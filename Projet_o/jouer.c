@@ -80,7 +80,7 @@ int jouer_v1(){
     if (coup==NULL){
         free(coup);
         destroy(plateau);
-        printf("Erreur init : allocation coup");
+        printf("Erreur init : allocation (coup)");
         return EXIT_FAIL;
 
     }
