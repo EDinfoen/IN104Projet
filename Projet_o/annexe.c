@@ -2,24 +2,21 @@
 
 typedef struct coup_ {int xi; int yi; int xf; int yf;} coup_t;
 
-int init(int** plateau){
-    /*
-    plateau = malloc(SIZE*sizeof(int*));
-    if(plateau == NULL){
-        printf("Erreur init: allocation (plateau)\n");
-        return EXIT_FAIL;
+int max(int a, int b){
+    if(a>=b){
+        return a;
     }
-    for(int i = 0; i < SIZE; i++){
-        plateau[i] = malloc(SIZE*sizeof(int));
-        if(plateau[i] == NULL){
-            printf("Erreur init: allocation (plateau[%d])\n", i);
-            for(int j = 0; j < i; j++){
-                free(plateau[i]);
-            }
-            free(plateau);
-            return EXIT_FAIL;
-        }
-    }*/
+    return b;
+}
+
+int abs(int x){
+    if(x < 0){
+        return -x;
+    }
+    return x;
+}
+
+int init(int** plateau){
 
     for (int i = 0; i < SIZE; i++){
         plateau[i][0] = J1;
@@ -35,9 +32,88 @@ int init(int** plateau){
     return EXIT_SUCCESS;
 }
 
-bool licite(int** plateau, coup_t* coup, int J){ // A faire
+bool licite(int** plateau, coup_t* coup, int J){ 
+    // Affiche par effet de bord : 'Coup non licite' ou 'Coup licite' 
+    // Pas de vérif 
 
-    return coup->yf >= 0;
+    int xi = coup->xi;
+    int yi = coup->yi;
+    int xf = coup->xf;
+    int yf = coup->yf;
+
+    if(xi < 0 || xi > SIZE-1 || yi < 0 || yi > SIZE-1 || plateau[xi][yi] != J){ // Case de départ
+        printf("Coup non licite\n");
+        return false;
+    }
+    if(xf < 0 || xf > SIZE-1 || yf < 0 || yf > SIZE-1 || plateau[xf][yf] != VIDE){ // Case de fin
+        printf("Coup non licite\n");
+        return false;
+    }
+
+    if( xi == xf && yi == yf){ // Pas de mouvement
+        printf("Coup non licite\n");
+        return false;
+    }
+
+    if( J == BOBAIL){ // Mouvement de Bobail
+        if(max(abs(xf - xi), abs(yf - yi)) != 1){ // Bouge de 1 case
+            printf("Coup non licite\n");
+            return false;
+        }
+
+        printf("Coup licite\n");
+        return true;
+        
+    }
+    if( J == J1 || J == J2){ // Mouvement de joueur
+
+        int dx = 2;
+        int dy = 2;
+
+        if( xf == xi ){
+            dx = 0;
+            dy = (yf - yi)/abs(yf - yi);
+        }
+        if(yf == yi){
+            dx = (xf - xi)/abs(xf - xi);
+            dy = 0;
+        }
+
+        if( abs(xi - xf) == abs(yi - yf) ){
+            dx = (xf - xi)/abs(xf - xi); 
+            dy = (yf - yi)/abs(yf - yi);
+        }
+
+        if(dx * dy >= 2){ // La direction n'est pas reconnue (dx et dy on gardé leur valeur par défaut)
+            printf("Coup non licite\n");
+            return true;
+        }
+
+        int x_temp = xi;
+        int y_temp = yi;
+
+        while (x_temp != xf && y_temp != yf){ // Chemin libre
+            x_temp = x_temp + dx;
+            y_temp = y_temp + dy;
+
+            if(plateau[x_temp][y_temp] != VIDE){
+                printf("Coup non licite\n");
+                return true;
+            }
+        }
+
+        if(xf+dx >= 0 && xf+dx < SIZE && yf+dy >= 0 && yf+dy < SIZE && plateau[xf+dx][yf+dy] == VIDE ){ // Mouvement pas complet
+            printf("Coup non licite\n");
+            return true;
+        }
+
+        printf("Coup licite\n");
+        return true;
+    }
+
+    printf("Coup non licite\n"); // Ne doit pas arriver 
+    return false;
+    
 }
 
 int localisation_bobail(int** plateau, int* x, int* y){
@@ -83,7 +159,7 @@ int saisie_coup(int** plateau, coup_t* coup, int J){
         if(J == J1 || J == J2){ // Déplacement Joueur
             char c_xf = ' ';
             char c_xi = ' ';
-            printf("Quel pion déplacer ? Où le déplacer ? (Format:A0 A0) :");
+            printf("Joueur %d : mouvement pion (Format:A0 A0) :", J+1);
             verif = scanf("%c%d%c%c%d%c", &c_xi, &yi, &c, &c_xf, &yf, &c); // Saisie case départ
             if( verif == 6 && c== '\n'){
                 xi = (int)c_xi - 65;
@@ -98,7 +174,7 @@ int saisie_coup(int** plateau, coup_t* coup, int J){
             }
         }
         if(J == BOBAIL){ // Déplacement Bobail
-            printf("Où déplacer le bobail ? Case :");
+            printf("Joueur %d : mouvement Bobail (Format:A0) :", J+1);
             char c_xf = ' ';
             verif = scanf("%c%d%c", &c_xf, &yf, &c);
             if( verif == 3){
