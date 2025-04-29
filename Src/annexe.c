@@ -92,7 +92,7 @@ bool licite(int** plateau, coup_t* coup, int J){
 
         if(dx * dy >= 2){ // La direction n'est pas reconnue (dx et dy on gardé leur valeur par défaut)
             printf("Coup non licite\n");
-            return true;
+            return false;
         }
 
         int x_temp = xi;
@@ -104,13 +104,13 @@ bool licite(int** plateau, coup_t* coup, int J){
 
             if(plateau[x_temp][y_temp] != VIDE){
                 printf("Coup non licite\n");
-                return true;
+                return false;
             }
         }
 
         if(xf+dx >= 0 && xf+dx < SIZE && yf+dy >= 0 && yf+dy < SIZE && plateau[xf+dx][yf+dy] == VIDE ){ // Mouvement pas complet
             printf("Coup non licite\n");
-            return true;
+            return false;
         }
 
         printf("Coup licite\n");
@@ -154,7 +154,7 @@ int saisie_coup(int** plateau, coup_t* coup, int J){
     coup->yf = yf;
 
     int verif = 0;
-    while(!licite(plateau, coup, J)){
+    do{
         char c = ' '; // Séparateur et saut de ligne
         if(J == J1 || J == J2){ // Déplacement Joueur
             char c_xf = ' ';
@@ -187,7 +187,7 @@ int saisie_coup(int** plateau, coup_t* coup, int J){
             }
         }
         
-    }
+    }while(!licite(plateau, coup, J));
 
     return EXIT_SUCCESS;
 }
