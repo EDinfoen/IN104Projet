@@ -1,6 +1,9 @@
 #include "constante.h"
 
 int affichage(int** plateau){
+    /*
+    Affiche le plateau.
+    */
 
     if( plateau == NULL){
         printf("Erreur affichage: plateau manquant\n ");

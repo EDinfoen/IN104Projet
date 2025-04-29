@@ -1,3 +1,7 @@
+/*
+Contient les fonctions d'affichages du plateau. 
+*/
+
 #ifndef AFFICHAGE
 #define AFFICHAGE
 

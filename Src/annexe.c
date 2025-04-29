@@ -17,7 +17,10 @@ int abs(int x){
 }
 
 int init(int** plateau){
-
+    /*
+    Initialise le plateau en attribuant les valeurs aux cases contenant des pions. 
+    Ne fait pas l'allocation mémoire.
+    */
     for (int i = 0; i < SIZE; i++){
         plateau[i][0] = J1;
         plateau[i][SIZE-1] = J2;
@@ -33,8 +36,11 @@ int init(int** plateau){
 }
 
 bool licite(int** plateau, coup_t* coup, int J){ 
-    // Affiche par effet de bord : 'Coup non licite' ou 'Coup licite' 
-    // Pas de vérif 
+    /*
+    Vérifie la légalité d'un coup.
+    Affiche par effet de bord : 'Coup non licite' ou 'Coup licite' 
+    */ 
+    
 
     int xi = coup->xi;
     int yi = coup->yi;
@@ -117,6 +123,9 @@ bool licite(int** plateau, coup_t* coup, int J){
 }
 
 int localisation_bobail(int** plateau, int* x, int* y){
+    /*
+    Attribu aux variables x et y la position du Bobail. 
+    */
     for (int i = 0; i < SIZE; i++){
         for(int j = 0; j < SIZE; j++){
             if(plateau[i][j] == BOBAIL){
@@ -129,6 +138,10 @@ int localisation_bobail(int** plateau, int* x, int* y){
 }
 
 int saisie_coup(int** plateau, coup_t* coup, int J){
+
+    /*
+    Saisie un coup licite. Demande tant que le coup n'est pas licite.
+    */
 
     int xi = -1;
     int xf = -1;
@@ -182,6 +195,9 @@ int saisie_coup(int** plateau, coup_t* coup, int J){
 
 
 int mouvement(int** plateau, coup_t* coup){ 
+    /*
+    Modifie le plateau en fonction du coup joué.
+    */
     plateau[coup->xf][coup->yf] = plateau[coup->xi][coup->yi];
     plateau[coup->xi][coup->yi] = VIDE;
 
@@ -191,7 +207,11 @@ int mouvement(int** plateau, coup_t* coup){
 
 
 int fin(int** plateau, bool* fini, int J_act, int* gagnant){
-
+    /*
+    Verifie si la partie est finie. 
+    Attribu au pointeur fini si la partie est finie ou non.
+    Attribu au pointeur gagnant le joueur gagnant.
+    */
     int x = -1;
     int y = -1;
 
@@ -204,6 +224,8 @@ int fin(int** plateau, bool* fini, int J_act, int* gagnant){
         *fini = true;
         *gagnant = J1;
     }
+
+    // Verification des cases libres autour du Bobail
 
     bool h = (x > 0)&&(plateau[x-1][y] == VIDE);
     bool hg = (x > 0)&&(y > 0)&&(plateau[x-1][y-1] == VIDE);
@@ -226,6 +248,9 @@ int fin(int** plateau, bool* fini, int J_act, int* gagnant){
 }
 
 void destroy(int** plateau){
+    /*
+    Désalloue la mémoire du plateau.
+    */
     for(int j = 0; j < SIZE; j++){
         free(plateau[j]);
     }
