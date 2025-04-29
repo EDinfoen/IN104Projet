@@ -1,3 +1,7 @@
+/* 
+Contient les fonctions annexes qui servent à jouer une partie dans le fichier jouer.c .
+*/
+
 #include "constante.h"
 typedef struct coup_ {int xi; int yi; int xf; int yf;} coup_t;
 
