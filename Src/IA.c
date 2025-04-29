@@ -2,9 +2,20 @@
 #include "affichage.h"
 
 
+/*
+Fichier qui contiendra le code pour l'IA.
+Pour le moment, il n'y a qu'une fonction coup aléatoire qui donne un coup aléatoire pour un joueur donné.
+Elle utilise les fonctions avancer et piece_mobile.
+Le main a permis de tester coup_aleatoire pour le plateau initial.
+*/
 enum direction {N, NE, E, SE, S, SW, W, NW} ;
 
 bool avancer( int xi, int yi, enum direction dir, int* xf, int* yf, int **plateau ){
+    " Vérifie que le pion se trouvant en (xi,yi) 
+    peut avancer d'une case dans la direction dir.
+    Si oui, elle modifie les pointeurs xf et yf pour 
+    qu'ils indiquent la case suivante."
+    
     int x,y;
     switch (dir)
     {
@@ -33,12 +44,20 @@ bool avancer( int xi, int yi, enum direction dir, int* xf, int* yf, int **platea
         x=xi-1;y=yi-1;
         break;
     }
+
+// Vérification que la nouvelle case est dans le plateau et inoccupée.
+
 if( 0>x || x>(SIZE - 1) || y<0 || y>(SIZE - 1) ){return false;}
 if (plateau[x][y]==VIDE ){ *xf=x;*yf=y;return true;}
 return false;
 }
 
 int piece_mobile(int** plateau, int x, int y){
+"Test si un le pion en (x,y) a au moins une direction dans
+laquelle il peut avancer, c'est-à-dire qu'il y a une case vide
+autour de lui."
+
+//Parcours des 9 cases alentours du pion.
     for(int i=-1;i<2;i++){
         for(int j=-1;j<2;j++){
             if (0<x+i && x+i<(SIZE - 1) && y+j>0 &&y+j<(SIZE - 1)){
@@ -51,7 +70,7 @@ return false;
 
 
 coup_t* coup_aleatoire ( int** plateau, piece joueur){
-
+"Renvoie un coup aléatoire possible pour joueur."
 srand(time(NULL));
 int xi,yi;
 if (joueur==J1 || joueur==J2){
@@ -106,6 +125,7 @@ while(!avance){
     enum direction dir=directions[k];
     avance=avancer(xi,yi,dir,&xf,&yf,plateau);
     if(!avance){//direction bloquee il faut changer
+        //on place la direction testée en bout de tableau pour ne plus la choisir
         directions[k]=directions[nbr_dir];
         nbr_dir--;
     }else if(joueur!=BOBAIL){//deplacement jusqu'au bout de la direction
@@ -122,9 +142,10 @@ return coup;
 
 
 ////////////////////////////////////////////////////////////////////////
+//Reprise du code de la fonction jouer pour tester coup aléatoire sur le plateau de départ.
 #define DEBUG
 
-int tour(int** plateau,int J ){/// Pas de vérif (flemme)
+int tour(int** plateau,int J ){
     coup_t* coup=coup_aleatoire(plateau, J);
     if( coup== NULL || mouvement(plateau, coup) == EXIT_FAIL || affichage(plateau) == EXIT_FAIL){
         return EXIT_FAIL;

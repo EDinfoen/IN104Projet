@@ -4,6 +4,7 @@
 
 
 int tour(int** plateau,coup_t* coup, int J ){
+    "Exécute un tour : demande de coup, modification de la position du pion, affichage du nouvel état du plateau."
     saisie_coup(plateau, coup, J);
     mouvement(plateau, coup);
     affichage(plateau);
@@ -13,7 +14,7 @@ int tour(int** plateau,coup_t* coup, int J ){
 
 
 int jouer_v1(){
-    
+    "Implémente une partie de joueur contre joueur. La fonciton s'arrête quand l'un d'eux a gagné."
     // Allocation du plateau
     int** plateau; 
     plateau = malloc(SIZE*sizeof(int*));
@@ -55,6 +56,7 @@ int jouer_v1(){
 
     }
     
+    //Lors du 1er tour, pas de mvt du bobail.
     tour(plateau, coup, J1);
     
     int J_act = J2;
@@ -81,7 +83,8 @@ int jouer_v1(){
     // Fin de partie
 
     printf("Joueur %d a gagné !\n", gagnant + 1);
-
+    
+    // Mémoire libérée
     free(coup);
     destroy(plateau);
 
