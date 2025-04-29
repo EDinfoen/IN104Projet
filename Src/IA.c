@@ -142,6 +142,7 @@ return coup;
 
 
 ////////////////////////////////////////////////////////////////////////
+//Reprise du code de la fonction jouer pour tester coup aléatoire sur le plateau de départ.
 #define DEBUG
 
 int tour(int** plateau,int J ){

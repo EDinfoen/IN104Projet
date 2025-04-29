@@ -4,7 +4,7 @@
 
 
 int tour(int** plateau,coup_t* coup, int J ){
-    "Exécute un tour : demande de coup, modification de la position du pion, affichage du nouvel état du plateau"
+    "Exécute un tour : demande de coup, modification de la position du pion, affichage du nouvel état du plateau."
     saisie_coup(plateau, coup, J);
     mouvement(plateau, coup);
     affichage(plateau);
