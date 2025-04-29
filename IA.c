@@ -1,7 +1,6 @@
 #include "annexe.h"
-#include "constante.h"
 #include "affichage.h"
-#include <time.h>
+
 
 /*
 Fichier qui contiendra le code pour l'IA.
@@ -47,7 +46,8 @@ bool avancer( int xi, int yi, enum direction dir, int* xf, int* yf, int **platea
     }
 
 // Vérification que la nouvelle case est dans le plateau et inoccupée.
-if( 0>x || x>4 || y<0 || y>4 ){return false;}
+
+if( 0>x || x>(SIZE - 1) || y<0 || y>(SIZE - 1) ){return false;}
 if (plateau[x][y]==VIDE ){ *xf=x;*yf=y;return true;}
 return false;
 }
@@ -60,7 +60,7 @@ autour de lui."
 //Parcours des 9 cases alentours du pion.
     for(int i=-1;i<2;i++){
         for(int j=-1;j<2;j++){
-            if (0<x+i && x+i<4 && y+j>0 &&y+j<4){
+            if (0<x+i && x+i<(SIZE - 1) && y+j>0 &&y+j<(SIZE - 1)){
                 if (plateau[x+i][y+j]==VIDE){return true;}
             }
         }
