@@ -3,15 +3,17 @@
 
 
 
-int tour(int** plateau,coup_t* coup, int J ){/// Pas de vérif (flemme)
-    if(saisie_coup(plateau, coup, J) == EXIT_FAIL || mouvement(plateau, coup) == EXIT_FAIL || affichage(plateau) == EXIT_FAIL){
-        return EXIT_FAIL;
-    }
+int tour(int** plateau,coup_t* coup, int J ){
+    saisie_coup(plateau, coup, J);
+    mouvement(plateau, coup);
+    affichage(plateau);
+
     return EXIT_SUCCESS;
 }
 
 
 int jouer_v1(){
+    
     // Allocation du plateau
     int** plateau; 
     plateau = malloc(SIZE*sizeof(int*));
@@ -33,9 +35,7 @@ int jouer_v1(){
 
     // Initialisation du plateau
 
-    if(init(plateau) == EXIT_FAIL){
-        return EXIT_FAIL;
-    }
+    init(plateau);
 
     printf("Symboles :\nJoueur J1 : x\nJoueur J2 : +\nBobail : o\n");
 
@@ -55,9 +55,7 @@ int jouer_v1(){
 
     }
     
-    if(tour(plateau, coup, J1) == EXIT_FAIL){
-        return EXIT_FAIL;
-    }
+    tour(plateau, coup, J1);
     
     int J_act = J2;
     int gagnant = -1;
@@ -65,31 +63,17 @@ int jouer_v1(){
 
     while(!fini){
         
-        if(tour(plateau, coup, BOBAIL) == EXIT_FAIL){ // Mouvement du Bobail
-            free(coup);
-            destroy(plateau);
-            return EXIT_FAIL;
-        }
-        if(fin(plateau, &fini, J_act, &gagnant) == EXIT_FAIL){
-            free(coup);
-            destroy(plateau);
-            return EXIT_FAIL;
-        }
+        tour(plateau, coup, BOBAIL); // Mouvement du Bobail
+           
+        fin(plateau, &fini, J_act, &gagnant);
+
         if(fini){
             break;
         }
 
-        if(tour(plateau, coup, J_act) == EXIT_FAIL){ // Mouvement du pion
-            free(coup);
-            destroy(plateau);
-            return EXIT_FAIL;
-        }
+        tour(plateau, coup, J_act); // Mouvement du pion
         
-        if(fin(plateau, &fini, J_act, &gagnant) == EXIT_FAIL){
-            free(coup);
-            destroy(plateau);
-            return EXIT_FAIL;
-        }
+        fin(plateau, &fini, J_act, &gagnant);
        
         J_act = 1 - J_act;
     }

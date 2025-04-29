@@ -117,11 +117,6 @@ bool licite(int** plateau, coup_t* coup, int J){
 }
 
 int localisation_bobail(int** plateau, int* x, int* y){
-    if(plateau == NULL){
-        printf("Erreur localisation_bobail: plateau manquant\n ");
-        return EXIT_FAIL;
-    }
-    ///////////////////////// VERIF x et y
     for (int i = 0; i < SIZE; i++){
         for(int j = 0; j < SIZE; j++){
             if(plateau[i][j] == BOBAIL){
@@ -134,14 +129,6 @@ int localisation_bobail(int** plateau, int* x, int* y){
 }
 
 int saisie_coup(int** plateau, coup_t* coup, int J){
-    if(plateau == NULL){
-        printf("Erreur saisie_coup: plateau manquant\n ");
-        return EXIT_FAIL;
-    }
-    if(coup == NULL){
-        printf("Erreur saisie_coup: coup manquant\n ");
-        return EXIT_FAIL;
-    }
 
     int xi = -1;
     int xf = -1;
@@ -180,7 +167,6 @@ int saisie_coup(int** plateau, coup_t* coup, int J){
             if( verif == 3){
                 localisation_bobail(plateau,&(coup->xi), &(coup->yi));
                 xf = (int)c_xf - 65;
-                //printf("%d,%d\n", xf, yf);
                 coup->xf = xf;
                 coup->yf = yf;
             }else{
@@ -195,15 +181,7 @@ int saisie_coup(int** plateau, coup_t* coup, int J){
 
 
 
-int mouvement(int** plateau, coup_t* coup){ /// UTILITE BOF
-    if(plateau == NULL){
-        printf("Erreur mouvement: plateau manquant\n ");
-        return EXIT_FAIL;
-    }
-    if(coup == NULL){
-        printf("Erreur mouvement: coup manquant\n ");
-        return EXIT_FAIL;
-    }
+int mouvement(int** plateau, coup_t* coup){ 
     plateau[coup->xf][coup->yf] = plateau[coup->xi][coup->yi];
     plateau[coup->xi][coup->yi] = VIDE;
 
@@ -213,18 +191,6 @@ int mouvement(int** plateau, coup_t* coup){ /// UTILITE BOF
 
 
 int fin(int** plateau, bool* fini, int J_act, int* gagnant){
-    if(plateau == NULL){
-        printf("Erreur fin: plateau manquant\n ");
-        return EXIT_FAIL;
-    }
-    if(fini == NULL){
-        printf("Erreur fin: fini manquant\n ");
-        return EXIT_FAIL;
-    }
-    if(gagnant == NULL){
-        printf("Erreur fin: gagnant manquant\n ");
-        return EXIT_FAIL;
-    }
 
     int x = -1;
     int y = -1;
@@ -250,7 +216,7 @@ int fin(int** plateau, bool* fini, int J_act, int* gagnant){
 
     
 
-    if(!(h||hg||hd||g||d||b||bg||bd)){ /////////////////////////////////////// PB
+    if(!(h||hg||hd||g||d||b||bg||bd)){ 
         printf("Bloqué !\n");
         *fini = true;
         *gagnant = J_act;
