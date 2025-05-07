@@ -35,7 +35,7 @@ int init(int** plateau){
     return EXIT_SUCCESS;
 }
 
-bool licite(int** plateau, coup_t* coup, int J){ 
+bool licite(int** plateau, coup_t* coup, piece J){ 
     /*
     Vérifie la légalité d'un coup.
     Affiche par effet de bord : 'Coup non licite' ou 'Coup licite' 
@@ -137,7 +137,7 @@ int localisation_bobail(int** plateau, int* x, int* y){
     return EXIT_SUCCESS;
 }
 
-int saisie_coup(int** plateau, coup_t* coup, int J){
+int saisie_coup(int** plateau, coup_t* coup, piece J){
 
     /*
     Saisie un coup licite. Demande tant que le coup n'est pas licite.
@@ -206,7 +206,7 @@ int mouvement(int** plateau, coup_t* coup){
 
 
 
-int fin(int** plateau, bool* fini, int J_act, int* gagnant){
+int fin(int** plateau, bool* fini, piece J_act, piece* gagnant){
     /*
     Verifie si la partie est finie. 
     Attribu au pointeur fini si la partie est finie ou non.

@@ -13,8 +13,8 @@ int affichage(int** plateau){
     printf("  ---------------------\n");
     
     for (int i = 0; i < SIZE; i ++){
-        printf("%c |", (char)(i+65));
-        for(int j = 0; j < SIZE; j++){
+        printf("%c |", (char)(i + 65));
+        for(int j = 0; j < SIZE; j ++){
             if(plateau[i][j] == J1){
                 printf(" x |");
             }

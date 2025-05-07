@@ -3,7 +3,7 @@
 
 
 
-int tour(int** plateau,coup_t* coup, int J ){
+int tour(int** plateau, coup_t* coup, piece J ){
     /*
     Exécute un tour : demande de coup, modification de la position du pion, affichage du nouvel état du plateau.
     */
@@ -19,6 +19,7 @@ int jouer_v1(){
     /*
     Implémente une partie de joueur contre joueur. La fonciton s'arrête quand l'un d'eux a gagné.
     */
+    
     // Allocation du plateau
     int** plateau; 
     plateau = malloc(SIZE*sizeof(int*));
@@ -26,6 +27,7 @@ int jouer_v1(){
         printf("Erreur init: allocation (plateau)\n");
         return EXIT_FAIL;
     }
+
     for(int i = 0; i < SIZE; i++){
         plateau[i] = malloc(SIZE*sizeof(int));
         if(plateau[i] == NULL){
@@ -52,7 +54,7 @@ int jouer_v1(){
     // Début de la partie
 
     coup_t* coup = malloc(sizeof(coup_t));
-    if (coup==NULL){
+    if (coup == NULL){
         free(coup);
         destroy(plateau);
         printf("Erreur init : allocation (coup)");
@@ -63,8 +65,8 @@ int jouer_v1(){
     //Lors du 1er tour, pas de mvt du bobail.
     tour(plateau, coup, J1);
     
-    int J_act = J2;
-    int gagnant = -1;
+    piece J_act = J2;
+    piece gagnant = VIDE; // Par défaut
     bool fini = false;
 
     while(!fini){
