@@ -13,4 +13,4 @@ int localisation_bobail(int** plateau, int* x, int* y);
 int saisie_coup(int** plateau, coup_t* coup, piece J);
 int mouvement(int** plateau, coup_t* coup);
 
-int fin(int** plateau, bool* fini, piece J_act, piece* gagnant); 
+bool fin(int** plateau, piece J_act, piece* gagnant); 

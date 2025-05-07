@@ -67,24 +67,20 @@ int jouer_v1(){
     
     piece J_act = J2;
     piece gagnant = VIDE; // Par défaut
-    bool fini = false;
+    //bool fini = false;
 
-    while(!fini){
-        
+    do{
         tour(plateau, coup, BOBAIL); // Mouvement du Bobail
            
-        fin(plateau, &fini, J_act, &gagnant);
-
-        if(fini){
+        if(fin(plateau, J_act, &gagnant)){
             break;
         }
 
         tour(plateau, coup, J_act); // Mouvement du pion
-        
-        fin(plateau, &fini, J_act, &gagnant);
-       
+    
         J_act = 1 - J_act;
-    }
+
+    }while(!fin(plateau, J_act, &gagnant));
 
     // Fin de partie
 

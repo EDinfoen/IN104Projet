@@ -206,7 +206,7 @@ int mouvement(int** plateau, coup_t* coup){
 
 
 
-int fin(int** plateau, bool* fini, piece J_act, piece* gagnant){
+int fin(int** plateau, piece J_act, piece* gagnant){
     /*
     Verifie si la partie est finie. 
     Attribu au pointeur fini si la partie est finie ou non.
@@ -214,14 +214,15 @@ int fin(int** plateau, bool* fini, piece J_act, piece* gagnant){
     */
     int x = -1;
     int y = -1;
+    bool fini = false;
 
     localisation_bobail(plateau, &x, &y);
     if(y == 0){
-        *fini = true;
+        fini = true;
         *gagnant = J2;
     }
     if(y == SIZE -1){
-        *fini = true;
+        fini = true;
         *gagnant = J1;
     }
 
@@ -240,11 +241,11 @@ int fin(int** plateau, bool* fini, piece J_act, piece* gagnant){
 
     if(!(h||hg||hd||g||d||b||bg||bd)){ 
         printf("Bloqué !\n");
-        *fini = true;
+        fini = true;
         *gagnant = J_act;
     }
 
-    return EXIT_SUCCESS; 
+    return fini; 
 }
 
 void destroy(int** plateau){
