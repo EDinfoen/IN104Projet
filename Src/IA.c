@@ -6,10 +6,8 @@ enum direction {N, NE, E, SE, S, SW, W, NW} ;
 
 bool avancer(int xi, int yi, direction dir, int* xf, int* yf, int **plateau){
     /*
-    Vérifie que le pion se trouvant en (xi,yi) 
-    peut avancer d'une case dans la direction dir.
-    Si oui, elle modifie les pointeurs xf et yf pour 
-    qu'ils indiquent la case suivante.
+    Vérifie que le pion se trouvant en (xi,yi) peut avancer d'une case dans la direction dir.
+    Si oui, elle modifie les pointeurs xf et yf pour qu'ils indiquent la case suivante.
     */    
     int x,y;
     switch (dir)
@@ -143,6 +141,7 @@ coup_t* coup_aleatoire (int** plateau, piece joueur){
 
     return coup;
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////
