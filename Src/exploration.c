@@ -5,8 +5,8 @@
 typedef generic_list_t noeud_list_t; 
 
 typedef struct noeud_ {int n; int N; int end; int** plateau; piece J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
-// n : Nombre de victoire de J 
-// N : nombre de d'exploration 
+// n : Nombre de victoires de J 
+// N : nombre d'explorations 
 // end : état partie 
 // code_coup : code pour passer plateau père à actuel
 // liste_fils : liste générique de noeud_t 
@@ -268,4 +268,38 @@ int main(){
     destroy(plateau);
 
     return EXIT_SUCCESS;
+}
+
+piece next_J(piece J){
+    piece next_J;
+    switch (J){
+        case J1:
+            next_J = B2;
+        case B1 :
+            next_J = J1;
+        case J2:
+            next_J = B1;
+        case B2:
+            next_J = J2;
+    }
+    return next_J;
+}
+bool exploration(noeud_t *root){
+    int nbr_fils=len(root->liste_fils);
+    if (nbr_fils==0){
+        // pas de fils à la feuille (jamais exploré) donc à générer
+
+
+        generation_fils(root->plateau,next_J, root->liste_fils);
+    }
+
+
+    if (nbr_fils>root->N){
+        noeud_t fils=generic_list_head(root->liste_fils);
+        for(;fils!=generic_list_tail(root->iste_fils);fils=generic_list_next(fils)){
+            if (fils->N==0){
+                int res=simulation(root->plateau, piece roo)
+            }
+        }
+    }
 }

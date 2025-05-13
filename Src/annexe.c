@@ -209,8 +209,8 @@ int mouvement(int** plateau, coup_t* coup){
 int fin(int** plateau, piece J_act, piece* gagnant){
     /*
     Verifie si la partie est finie. 
-    Attribu au pointeur fini si la partie est finie ou non.
-    Attribu au pointeur gagnant le joueur gagnant.
+    Retourne fini si la partie est finie ou non.
+    Attribue au pointeur gagnant le joueur gagnant.
     */
     int x = -1;
     int y = -1;

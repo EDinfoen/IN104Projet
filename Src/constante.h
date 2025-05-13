@@ -15,6 +15,6 @@ Contient les constantes, les includes de bibliothèques standarts et certain typ
 
     #define SIZE 5
 
-    typedef enum {J1, J2, BOBAIL, VIDE, IA} piece;
+    typedef enum {J1, J2, BOBAIL, VIDE, IA, B1, B2} piece;
 
 #endif
