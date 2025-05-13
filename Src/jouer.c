@@ -15,7 +15,7 @@ int tour(int** plateau, coup_t* coup, piece J ){
 }
 
 
-int jouer_v1(){
+int jouer_pvp(){
     /*
     Implémente une partie de joueur contre joueur. La fonciton s'arrête quand l'un d'eux a gagné.
     */

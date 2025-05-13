@@ -5,7 +5,7 @@
 
 typedef generic_list_t noeud_list_t; 
 
-typedef struct noeud_ {int n; int N; statut_t statut; int** plateau; piece J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
+typedef struct noeud_ {float n; float N; statut_t statut; int** plateau; piece J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
 // n : Nombre de victoires de J 
 // N : nombre d'explorations 
 // statut : état partie 
@@ -269,9 +269,8 @@ int res;
     }else{
         // noeud dont tous les fils ont été explorés au moins une fois
         noeud_t* max_fils;
-        int max_MCTS=0;;
+        float max_MCTS=0;;
         noeud_t* fils=generic_list_head(root->liste_fils);
-        //recherche du fils le plus intéressant (+ gd MCTS)
         for(;fils!=generic_list_tail(root->liste_fils);fils=generic_list_next(fils)){
             if ((fils->n) /(fils->N) + sqrt(2)*sqrt(log((root->N)/ (fils->N))) > max_MCTS){
                 max_MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(log((root->N)/ (fils->N)));
