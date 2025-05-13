@@ -118,7 +118,7 @@ void copier_plt(int** source, int** destination){ // Il existe peut-être plus e
 }
 
 
-int generation_fils(int** plateau, piece J, noeud_list_t* liste){ // PB pour initialiser le joueur sur les nouveaux plateaux.
+int generation_fils(int** plateau, piece J, noeud_list_t* liste){ // PB pour initialiser le joueur sur les nouveaux plateaux. B1 B2
 
     int xi;
     int yi;
@@ -163,8 +163,6 @@ int generation_fils(int** plateau, piece J, noeud_list_t* liste){ // PB pour ini
                         generic_list_ins_next(liste, NULL, nd); // Insertion en tête
                         //print_noeud(&&(nd));
                         
-
-
                     }else{
                         return EXIT_FAIL;
                     }

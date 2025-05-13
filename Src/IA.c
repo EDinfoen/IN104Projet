@@ -4,7 +4,7 @@
 
 enum direction {N, NE, E, SE, S, SW, W, NW} ;
 
-bool avancer(int xi, int yi, direction dir, int* xf, int* yf, int **plateau){
+bool avancer(int xi, int yi,enum direction dir, int* xf, int* yf, int **plateau){
     /*
     Vérifie que le pion se trouvant en (xi,yi) peut avancer d'une case dans la direction dir.
     Si oui, elle modifie les pointeurs xf et yf pour qu'ils indiquent la case suivante.
@@ -62,9 +62,22 @@ bool piece_mobile(int** plateau, int x, int y){
     }
     return false;
 }
+piece joueur_suiv(piece J){
+    switch (J){
+        case J1 :
+        return B2;
+        case J2 :
+        return B1;
+        case B1 :
+        return J1;
+        case B2 :
+        return J2;
+        default:
+        return VIDE;
+    }
+}
 
-
-coup_t* coup_aleatoire (int** plateau, piece joueur){
+int coup_aleatoire (int** plateau, piece joueur, coup_t* coup){
     /*
     Renvoie un coup aléatoire possible pour joueur.
     Allocation de la mémoire du coup retourné.
@@ -75,43 +88,39 @@ coup_t* coup_aleatoire (int** plateau, piece joueur){
         //on récupère les positions de pions
         int pions[SIZE];
         int nbr_pions = 0;
-        printf("position:\n");
+        //printf("position:\n");
         for (int i = 0; i < SIZE; i ++){
             for(int j = 0; j < SIZE; j++){
                 if (plateau[i][j] == joueur){
                     pions[nbr_pions] = i*10 + j;
-                    printf("%d,%d\n", i, j);
+                    //printf("%d,%d\n", i, j);
                     nbr_pions ++;
                 }
                 if(nbr_pions == SIZE){break;} //tous les pions trouvés
             }
         }
-        printf("trouve\n");
+        //printf("trouve\n");
         
         //choix d'un pion pouvant bouge
         bool bloque = true;
         while(bloque){
             int k = rand()%(nbr_pions+1);
-            printf("k=%d\n", k);
+            //printf("k=%d\n", k);
             xi = pions[k]/10;
             yi = pions[k]%10;
-            printf("%d,%d", xi, yi);
+            //printf("%d,%d", xi, yi);
             if(!piece_mobile(plateau, xi, yi)){
                 pions[k] = pions[nbr_pions];
                 nbr_pions--;
-                printf("bloque\n");
+                //printf("bloque\n");
             }else{bloque = false;}
         }
-        printf("mobile");
+        //printf("mobile");
     }else{
         localisation_bobail(plateau, &xi, &yi);
-        printf("bobail\n");
+        //printf("bobail\n");
     }
 
-    coup_t* coup = malloc(sizeof(coup_t));
-    if (coup == NULL){
-        //return EXIT_FAIL;
-    }
     coup->xi = xi;
     coup->yi = yi;
 
@@ -122,14 +131,14 @@ coup_t* coup_aleatoire (int** plateau, piece joueur){
     int xf, yf;
     while(!avance){
         int k = rand()%(nbr_dir+1);
-        printf("k2=%d\n", k);
+        //printf("k2=%d\n", k);
         enum direction dir = directions[k];
         avance = avancer(xi, yi, dir, &xf, &yf, plateau);
         if(!avance){//direction bloquee il faut changer
             //on place la direction testée en bout de tableau pour ne plus la choisir
             directions[k] = directions[nbr_dir];
             nbr_dir--;
-        }else if(joueur != BOBAIL){//deplacement jusqu'au bout de la direction
+        }else if(joueur != B1 && joueur != B2){//deplacement jusqu'au bout de la direction
             bool max = avancer(xf, yf, dir, &xf, &yf, plateau);
             while(max){//on peut peut-être encore avancer
                 max = avancer(xf, yf, dir, &xf, &yf, plateau);
@@ -139,10 +148,63 @@ coup_t* coup_aleatoire (int** plateau, piece joueur){
     coup->xf = xf;
     coup->yf = yf;
 
-    return coup;
+    return EXIT_SUCCESS;
 }
 
 
+int simulation(int** plateau, piece J, int* deep_max, int* res){
+    /* 
+    Alloue au pointeur res le resultat de la simulation. 1 = victoire; 0 = defaite
+    Alloue au pointeur deep_max le nombre de coup joué avant la fin de la simaulation. 
+    Si deep_max = 0, la partie est finie. 
+    */
+   piece J_act = J;
+   piece gagnant = VIDE;
+   coup_t* coup = malloc(sizeof(coup_t));
+   if(coup == NULL){
+       return EXIT_FAIL;
+   }
+   while(!fin(plateau, J_act, &gagnant) && (*deep_max <= DEEP)){
+        *deep_max += 1;
+        coup_aleatoire(plateau, J_act, coup); 
+        mouvement(plateau, coup);       
+        J_act = joueur_suiv(J_act);
+        //affichage(plateau);
+   }
+   if(*deep_max > DEEP){
+        *res = -1; // Profondeur dépasseé => defaite
+        return EXIT_SUCCESS;
+   }
+   if(gagnant == J){
+        *res =  1;
+        return EXIT_SUCCESS;
+   }else{
+        *res = 0;
+        return EXIT_SUCCESS;
+   }
+}
+
+
+int tour_IA(){
+    noeud_t* root;
+    init_noeud(root);
+
+    for (int i = 0; i < 500; i++){
+        exploration(root);
+    }
+    float ratio = 0.0;
+    int code = 9999;
+
+    for(; elem != NULL; elem = generic_list_next(elem)){
+        noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
+        if(nd.n / nd.N > ratio){
+            ratio = nd.n / nd.N;
+            code = nd.code_coup;
+        }
+    }
+
+    
+}
 
 ////////////////////////////////////////////////////////////////////////
 //Reprise du code de la fonction jouer pour tester coup aléatoire sur le plateau de départ.
@@ -177,15 +239,23 @@ int main(){
         return EXIT_FAIL;
     }
 
+   
     printf("Symboles :\nJoueur J1 : x\nJoueur J2 : +\nBobail : o\n");
-    int xf,yf;
-    printf("%d,", avancer(0, 3, SE, &xf, &yf, plateau));
+    //int xf,yf;
+    /*printf("%d,", avancer(0, 3, SE, &xf, &yf, plateau));
     printf("%d,%d\n", xf, yf);
     printf("%d", piece_mobile(plateau, 4, 3));
     coup_t* coup = coup_aleatoire(plateau, BOBAIL);
 
     mouvement(plateau, coup);
-    affichage(plateau);
+    affichage(plateau);*/
+
+    int deep = 0;
+    int res = 0;
+    
+    simulation(plateau, J1, &deep, &res);
+    printf("########################################");
+    printf("%d, %d\n",res, deep);
 
 
     destroy(plateau);
