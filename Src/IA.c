@@ -3,6 +3,14 @@
 
 
 enum direction {N, NE, E, SE, S, SW, W, NW} ;
+void copier_plt(int** source, int** destination){ // Il existe peut-être plus efficasse ?
+    for(int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++){
+            destination[i][j] = source[i][j];
+        }
+    }
+}
+
 
 bool avancer(int xi, int yi,enum direction dir, int* xf, int* yf, int **plateau){
     /*
@@ -158,16 +166,36 @@ int simulation(int** plateau, piece J, int* deep_max, int* res){
     Alloue au pointeur deep_max le nombre de coup joué avant la fin de la simaulation. 
     Si deep_max = 0, la partie est finie. 
     */
+
+    int** plateau_temp = malloc(SIZE*sizeof(int*));
+    if(plateau_temp == NULL){
+        return EXIT_FAIL;
+    }
+    for (int i = 0; i < SIZE; i++){
+        plateau_temp[i] =malloc(SIZE*sizeof(int));
+        if(plateau_temp[i] == NULL){
+            for(int j = 0; j < i; j++){
+                free(plateau_temp[j]);
+            }
+            free(plateau_temp);
+        return EXIT_FAIL;
+        }
+    }
+    copier_plt(plateau, plateau_temp);
+
+
+
+
    piece J_act = J;
    piece gagnant = VIDE;
    coup_t* coup = malloc(sizeof(coup_t));
    if(coup == NULL){
        return EXIT_FAIL;
    }
-   while(!fin(plateau, J_act, &gagnant) && (*deep_max <= DEEP)){
+   while(!fin(plateau_temp, J_act, &gagnant) && (*deep_max <= DEEP)){
         *deep_max += 1;
-        coup_aleatoire(plateau, J_act, coup); 
-        mouvement(plateau, coup);       
+        coup_aleatoire(plateau_temp, J_act, coup); 
+        mouvement(plateau_temp, coup);       
         J_act = joueur_suiv(J_act);
         //affichage(plateau);
    }
@@ -184,7 +212,7 @@ int simulation(int** plateau, piece J, int* deep_max, int* res){
    }
 }
 
-
+/*
 int tour_IA(){
     noeud_t* root;
     init_noeud(root);
@@ -194,7 +222,7 @@ int tour_IA(){
     }
     float ratio = 0.0;
     int code = 9999;
-
+    generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
     for(; elem != NULL; elem = generic_list_next(elem)){
         noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
         if(nd.n / nd.N > ratio){
@@ -202,10 +230,12 @@ int tour_IA(){
             code = nd.code_coup;
         }
     }
+    return 2;
+    //coup_t* coup 
 
-    
+
 }
-
+*/
 ////////////////////////////////////////////////////////////////////////
 //Reprise du code de la fonction jouer pour tester coup aléatoire sur le plateau de départ.
 
