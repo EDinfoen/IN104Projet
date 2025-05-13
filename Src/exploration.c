@@ -1,13 +1,14 @@
 #include "annexe.h"
 #include "affichage.h"
 #include "generic_list.h"
+#include <math.h>
 
 typedef generic_list_t noeud_list_t; 
 
-typedef struct noeud_ {int n; int N; int end; int** plateau; piece J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
+typedef struct noeud_ {int n; int N; statut_t statut; int** plateau; piece J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
 // n : Nombre de victoires de J 
 // N : nombre d'explorations 
-// end : état partie 
+// statut : état partie 
 // code_coup : code pour passer plateau père à actuel
 // liste_fils : liste générique de noeud_t 
 
@@ -200,11 +201,96 @@ int generation_fils(int** plateau, piece J, noeud_list_t* liste){ // PB pour ini
 }
 
 
+piece next_J(piece J){
+    // Renvoie le prochain joueur ou bobail
+    piece next_J;
+    switch (J){
+        case J1:
+            next_J = B2;
+        case B1 :
+            next_J = J1;
+        case J2:
+            next_J = B1;
+        case B2:
+            next_J = J2;
+    }
+    return next_J;
+}
 
 
+int exploration(noeud_t *root){
+    int nbr_fils=len(root->liste_fils);
 
+    if (nbr_fils==0){
+        // pas de fils à la feuille (jamais exploré) donc à générer
+        piece nextJ = next_J (root->J);
+        generation_fils(root->plateau,nextJ, root->liste_fils);
+    }
 
+int res;
 
+    if (nbr_fils > root->N){
+        //fils générés mais pas tous explorés
+        noeud_t* fils=generic_list_head(root->liste_fils);
+        for(;fils!=generic_list_tail(root->liste_fils);fils=generic_list_next(fils)){
+            if (fils->N==0){
+                piece nextJ = next_J(root->J);
+                int deep_max;
+                if (simulation(root->plateau, piece nextJ, &deep_max, &res)==0){
+                    return EXIT_FAIL;
+                }
+                if (res==0){
+                    //défaite
+                    if (deep_max==0){
+                        root->statut=D;
+                    }else{
+                        root->statut=EN;
+                    }
+                }else{
+                    //victoire
+                    root->statut=EN;
+                    if (deep_max==0){
+                        root->statut=V;
+                    }else{
+                        root->statut=EN;
+                    }
+                }
+                //mise à jour du fils qui a été exploré
+                fils->N=1;
+                fils->n=res;
+                if (nextJ== B1 || nextJ==B2){
+                    res=1-res;
+                }
+                break;
+            }
+        }
+    }else if(nbr_fils==0){
+        //noeud sans fils donc son statut est défini comme V ou D, partie finie
+        if (statut==V){int res=1;
+        }else{int res=0;}
+    }else{
+        // noeud dont tous les fils ont été explorés au moins une fois
+        noeud_t* max_fils;
+        int max_MCTS=0;;
+        noeud_t* fils=generic_list_head(root->liste_fils);
+        //recherche du fils le plus intéressant (+ gd MCTS)
+        for(;fils!=generic_list_tail(root->liste_fils);fils=generic_list_next(fils)){
+            if ((fils->n) /(fils->N) + sqrt(2)*sqrt(log((root->N)/ (fils->N))) > max_MCTS){
+                max_MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(log((root->N)/ (fils->N)));
+                max_fils = fils;
+            }
+            res=exploration(max_fils);
+        }
+    }
+// mise à jour du noeud courant
+root->N +=1;
+if (root->J == B1 || root->J == B2){
+    root->n +=res;
+    return res;
+}
+root->n += 1-res;
+return 1-res;
+}
 
 ////////////////////////// TESTS ////////////////////////////////
 // A supprimer après fusion
@@ -265,41 +351,13 @@ int main(){
     print_noeud_list(&liste);
     
 
-    destroy(plateau);
+    noeud_t noeud;
+    init_noeud(&noeud);
+    noeud.plateau=plateau;
+    exploration (&noeud);
+    print_noeud_list(noeud.liste_fils);
+    
+
 
     return EXIT_SUCCESS;
-}
-
-piece next_J(piece J){
-    piece next_J;
-    switch (J){
-        case J1:
-            next_J = B2;
-        case B1 :
-            next_J = J1;
-        case J2:
-            next_J = B1;
-        case B2:
-            next_J = J2;
-    }
-    return next_J;
-}
-bool exploration(noeud_t *root){
-    int nbr_fils=len(root->liste_fils);
-    if (nbr_fils==0){
-        // pas de fils à la feuille (jamais exploré) donc à générer
-
-
-        generation_fils(root->plateau,next_J, root->liste_fils);
-    }
-
-
-    if (nbr_fils>root->N){
-        noeud_t fils=generic_list_head(root->liste_fils);
-        for(;fils!=generic_list_tail(root->iste_fils);fils=generic_list_next(fils)){
-            if (fils->N==0){
-                int res=simulation(root->plateau, piece roo)
-            }
-        }
-    }
 }

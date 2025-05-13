@@ -16,5 +16,10 @@ Contient les constantes, les includes de bibliothèques standarts et certain typ
     #define SIZE 5
 
     typedef enum {J1, J2, BOBAIL, VIDE, IA, B1, B2} piece;
+    typedef enum {V, D, EC} statut_t;
+    /*V = Victoire assurée;
+      D = Défaite assurée;
+      EN = partie En Cours (fin de partie avec simulation aléatoire)
+    */
 
 #endif
