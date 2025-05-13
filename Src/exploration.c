@@ -4,7 +4,12 @@
 
 typedef generic_list_t noeud_list_t; 
 
-typedef struct noeud_ {int n; int N; bool end; int** plateau; piece J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
+typedef struct noeud_ {int n; int N; int end; int** plateau; piece J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
+// n : Nombre de victoire de J 
+// N : nombre de d'exploration 
+// end : état partie 
+// code_coup : code pour passer plateau père à actuel
+// liste_fils : liste générique de noeud_t 
 
 enum direction {N, NE, E, SE, S, SW, W, NW} ; // A supprimer après fusion
 
