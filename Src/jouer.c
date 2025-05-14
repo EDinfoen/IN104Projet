@@ -3,7 +3,7 @@
 
 
 
-int tour(int** plateau, coup_t* coup, piece J ){
+int tour(int** plateau, coup_t* coup, piece_t J ){
     /*
     Exécute un tour : demande de coup, modification de la position du pion, affichage du nouvel état du plateau.
     */
@@ -65,8 +65,8 @@ int jouer_pvp(){
     //Lors du 1er tour, pas de mvt du bobail.
     tour(plateau, coup, J1);
     
-    piece J_act = J2;
-    piece gagnant = VIDE; // Par défaut
+    piece_t J_act = J2;
+    piece_t gagnant = VIDE; // Par défaut
     //bool fini = false;
 
     do{
@@ -144,8 +144,8 @@ int jouer_IA(){ // A FAIRE
     //Lors du 1er tour, pas de mvt du bobail.
     tour(plateau, coup, J1);
     
-    piece J_act = J2;
-    piece gagnant = VIDE; // Par défaut
+    piece_t J_act = J2;
+    piece_t gagnant = VIDE; // Par défaut
     //bool fini = false;
 
     do{

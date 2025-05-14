@@ -5,7 +5,7 @@
 
 typedef generic_list_t noeud_list_t; 
 
-typedef struct noeud_ {float n; float N; statut_t statut; int** plateau; piece J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
+typedef struct noeud_ {float n; float N; statut_t statut; int** plateau; piece_t J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
 // n : Nombre de victoires de J 
 // N : nombre d'explorations 
 // statut : état partie 
@@ -118,7 +118,7 @@ void copier_plt(int** source, int** destination){ // Il existe peut-être plus e
 }
 
 
-int generation_fils(int** plateau, piece J, noeud_list_t* liste){ // PB pour initialiser le joueur sur les nouveaux plateaux. B1 B2
+int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ // PB pour initialiser le joueur sur les nouveaux plateaux. B1 B2
 
     int xi;
     int yi;
@@ -199,9 +199,9 @@ int generation_fils(int** plateau, piece J, noeud_list_t* liste){ // PB pour ini
 }
 
 
-piece next_J(piece J){
+piece_t next_J(piece_t J){
     // Renvoie le prochain joueur ou bobail
-    piece next_J;
+    piece_t next_J;
     switch (J){
         case J1:
             next_J = B2;
@@ -217,24 +217,24 @@ piece next_J(piece J){
 
 
 int exploration(noeud_t *root){
-    int nbr_fils=len(root->liste_fils);
+    int nbr_fils = len(root->liste_fils);
 
-    if (nbr_fils==0){
+    if (nbr_fils == 0){
         // pas de fils à la feuille (jamais exploré) donc à générer
-        piece nextJ = next_J (root->J);
-        generation_fils(root->plateau,nextJ, root->liste_fils);
+        piece_t nextJ = next_J (root->J);
+        generation_fils(root->plateau, nextJ, root->liste_fils);
     }
 
-int res;
+    int res;
 
     if (nbr_fils > root->N){
         //fils générés mais pas tous explorés
         noeud_t* fils=generic_list_head(root->liste_fils);
         for(;fils!=generic_list_tail(root->liste_fils);fils=generic_list_next(fils)){
             if (fils->N==0){
-                piece nextJ = next_J(root->J);
+                piece_t nextJ = next_J(root->J);
                 int deep_max;
-                if (simulation(root->plateau, piece nextJ, &deep_max, &res)==0){
+                if (simulation(root->plateau, piece_t nextJ, &deep_max, &res)==0){
                     return EXIT_FAIL;
                 }
                 if (res==0){

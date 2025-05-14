@@ -70,7 +70,7 @@ bool piece_mobile(int** plateau, int x, int y){
     }
     return false;
 }
-piece joueur_suiv(piece J){
+piece_t joueur_suiv(piece_t J){
     switch (J){
         case J1 :
         return B2;
@@ -85,7 +85,7 @@ piece joueur_suiv(piece J){
     }
 }
 
-int coup_aleatoire (int** plateau, piece joueur, coup_t* coup){
+int coup_aleatoire (int** plateau, piece_t joueur, coup_t* coup){
     /*
     Renvoie un coup aléatoire possible pour joueur.
     Allocation de la mémoire du coup retourné.
@@ -160,7 +160,7 @@ int coup_aleatoire (int** plateau, piece joueur, coup_t* coup){
 }
 
 
-int simulation(int** plateau, piece J, int* deep_max, int* res){
+int simulation(int** plateau, piece_t J, int* deep_max, int* res){
     /* 
     Alloue au pointeur res le resultat de la simulation. 1 = victoire; 0 = defaite
     Alloue au pointeur deep_max le nombre de coup joué avant la fin de la simaulation. 
@@ -186,8 +186,8 @@ int simulation(int** plateau, piece J, int* deep_max, int* res){
 
 
 
-   piece J_act = J;
-   piece gagnant = VIDE;
+   piece_t J_act = J;
+   piece_t gagnant = VIDE;
    coup_t* coup = malloc(sizeof(coup_t));
    if(coup == NULL){
        return EXIT_FAIL;
@@ -212,7 +212,7 @@ int simulation(int** plateau, piece J, int* deep_max, int* res){
    }
 }
 
-/*
+
 int tour_IA(){
     noeud_t* root;
     init_noeud(root);
@@ -222,20 +222,33 @@ int tour_IA(){
     }
     float ratio = 0.0;
     int code = 9999;
+    noeud_t* next_root; 
+
     generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
     for(; elem != NULL; elem = generic_list_next(elem)){
         noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
         if(nd.n / nd.N > ratio){
-            ratio = nd.n / nd.N;
+            ratio = nd.n / nd.N; //////////////////// DIV euclid
             code = nd.code_coup;
+            next_root = nd;
         }
     }
-    return 2;
-    //coup_t* coup 
+    
+    coup_t* coup;
+    int temp = code_coup;
+    coup->yf = temp%10;
+    temp = temp/10;
+    coup->xf = temp%10;
+    temp = temp/10;
+    coup->yi = temp%10;
+    temp = temp/10;
+    coup->xi = temp%10;
+    
+
 
 
 }
-*/
+
 ////////////////////////////////////////////////////////////////////////
 //Reprise du code de la fonction jouer pour tester coup aléatoire sur le plateau de départ.
 

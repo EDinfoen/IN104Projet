@@ -8,9 +8,9 @@ typedef struct coup_ {int xi; int yi; int xf; int yf;} coup_t;
 int init(int** plateau);
 void destroy(int ** plateau);
 
-bool licite(int** plateau, coup_t* coup, piece J); 
+bool licite(int** plateau, coup_t* coup, piece_t J); 
 int localisation_bobail(int** plateau, int* x, int* y);
-int saisie_coup(int** plateau, coup_t* coup, piece J);
+int saisie_coup(int** plateau, coup_t* coup, piece_t J);
 int mouvement(int** plateau, coup_t* coup);
 
-bool fin(int** plateau, piece J_act, piece* gagnant); 
+bool fin(int** plateau, piece_t J_act, piece_t* gagnant); 
