@@ -5,18 +5,20 @@
 
 typedef generic_list_t noeud_list_t; 
 
-typedef struct noeud_ {float n; float N; statut_t statut; int** plateau; piece_t J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
+typedef struct noeud_ {float n; int N; statut_t statut; int** plateau; piece_t J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
 // n : Nombre de victoires de J 
 // N : nombre d'explorations 
-// statut : état partie 
-// code_coup : code pour passer plateau père à actuel
+// statut : état partie pour J
+// J : joeur qui vient de jouer pour être dans la sitation actuelle
+// plateau : plateau actuel
+// code_coup : code pour passer du plateau père au plateau actuel
 // liste_fils : liste générique de noeud_t 
 
 enum direction {N, NE, E, SE, S, SW, W, NW} ; // A supprimer après fusion
 
 void print_noeud(noeud_t* nd){
     printf("#############################################\n");
-    printf("Nb_victoire = %d\n", nd->n);
+    printf("Nb_victoire = %f\n", nd->n);
     printf("Nb_exploration = %d\n", nd->N);
     
     printf("Code du coup joué : %d\n", nd->code_coup);
@@ -28,12 +30,8 @@ void print_noeud(noeud_t* nd){
 void print_noeud_list(noeud_list_t* liste){
     generic_list_elmt_t* elmt = generic_list_head(liste);
     for(; elmt!=NULL; elmt = generic_list_next(elmt)){
-        noeud_t* e = ((noeud_t*)generic_list_data(elmt));
-        if( e == NULL){
-            printf("sdfghj\n");
-        }else{
-            print_noeud(e);
-        }
+        noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
+        print_noeud(nd);
   }
 }
 
@@ -82,8 +80,23 @@ bool avancer(int xi, int yi, enum direction dir, int* xf, int* yf, int **plateau
 }
 
 int init_noeud(noeud_t* noeud){
-    noeud->n = 0;
+    /*
+    Initialise le noeud avec VALEURS PAR DEFAUTS:
+        n = 0.0
+        N = 0
+        statut = EC
+        J = VIDE
+        code_coup = 9999
+        liste_fils = liste vide
+    Alloue mémoire de :
+        plateau 
+        liste_fils
+    */
+    noeud->n = 0.0;
     noeud->N = 0;
+    noeud->statut = EC;
+    noeud->code_coup = 9999;
+    noeud->J = VIDE;
 
     noeud->liste_fils = malloc(sizeof(noeud_list_t));
     if(noeud->liste_fils == NULL){
@@ -95,7 +108,7 @@ int init_noeud(noeud_t* noeud){
         return EXIT_FAIL;
     }
     for (int i = 0; i < SIZE; i++){
-        (noeud->plateau)[i] =malloc(SIZE*sizeof(int));
+        (noeud->plateau)[i] = malloc(SIZE*sizeof(int));
         if((noeud->plateau)[i] == NULL){
             for(int j = 0; j < i; j++){
                 free((noeud->plateau)[j]);
@@ -118,14 +131,17 @@ void copier_plt(int** source, int** destination){ // Il existe peut-être plus e
 }
 
 
-int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ // PB pour initialiser le joueur sur les nouveaux plateaux. B1 B2
+int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ 
+    /*
+    
+    */
 
     int xi;
     int yi;
     int xf;
     int yf;
     if (J == J1 || J == J2){
-        //on récupère les positions des pions
+        // On récupère les positions des pions
         int pions[SIZE];
         int nb_pions = 0;
         
@@ -137,11 +153,11 @@ int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ // PB pour i
                 }
             }
         }
-        //choix d'un pion pouvant bouger
+        // Choix d'un pion pouvant bouger
         for(int pion_act = 0; pion_act < SIZE; pion_act++){
             xi = pions[pion_act] / 10;
             yi = pions[pion_act] % 10;
-            //choix d'une direction
+            // Choix d'une direction
             for(int dir = 0; dir < 8; dir++){
                 if(avancer(xi, yi, dir, &xf, &yf, plateau)){ // Si on peut bouger...
                     int x = xf;
@@ -152,14 +168,18 @@ int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ // PB pour i
                     }
                     
                     // Ajout du noeud sur la liste
-                    noeud_t* nd = malloc(sizeof(noeud_t));
+                    noeud_t* nd = malloc(sizeof(noeud_t)); 
                     
                     if(init_noeud(nd) == EXIT_SUCCESS){
-                        //printf("%p \n", &(nd->plateau));
+                        nd->n = 0.0;
+                        nd->N = 0;
+                        nd->statut = EC;
                         copier_plt(plateau, nd->plateau);
                         nd->plateau[xf][yf] = nd->plateau[xi][yi];
                         nd->plateau[xi][yi] = VIDE;
+                        nd->J = J;
                         nd->code_coup = ((xi*10 + yi)*10 + xf)*10 + yf;
+                        
                         generic_list_ins_next(liste, NULL, nd); // Insertion en tête
                         //print_noeud(&&(nd));
                         
@@ -169,23 +189,25 @@ int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ // PB pour i
                 }
             }
         }
-    }else if (J == BOBAIL) {
+    }else if (J == B1 || J == B2) {
         localisation_bobail(plateau, &xi, &yi);
-        //choix d'une direction
+        // Choix d'une direction
         for(int dir = 0; dir < 8; dir++){
-            if(avancer(xi, yi, dir, &xf, &yf, plateau)){ // Si on peut bouger...                
+            if(avancer(xi, yi, dir, &xf, &yf, plateau)){ // Si on peut bouger... on le fait mais on s'arrete            
                 // Ajout du noeud sur la liste
                 noeud_t* nd = malloc(sizeof(noeud_t));
-                //printf("%p \n", &nd);
+
                 if(init_noeud(nd) == EXIT_SUCCESS){
-                    //printf("%p \n", &(nd->plateau));
+                    nd->n = 0.0;
+                    nd->N = 0;
+                    nd->statut = EC;
                     copier_plt(plateau, nd->plateau);
                     nd->plateau[xf][yf] = nd->plateau[xi][yi];
                     nd->plateau[xi][yi] = VIDE;
+                    nd->J = J;
                     nd->code_coup = ((xi*10 + yi)*10 + xf)*10 + yf;
-                    generic_list_ins_next(liste, NULL, nd); // Insertion en tête
-                    //print_noeud(&&(nd));
                     
+                    generic_list_ins_next(liste, NULL, nd); // Insertion en tête
 
                 }else{
                     return EXIT_FAIL;
@@ -205,21 +227,31 @@ piece_t next_J(piece_t J){
     switch (J){
         case J1:
             next_J = B2;
+            break;
         case B1 :
             next_J = J1;
+            break;
         case J2:
             next_J = B1;
+            break;
         case B2:
             next_J = J2;
+            break;
+        default:
+            next_J = VIDE;
+            break;
     }
     return next_J;
 }
 
 
 int exploration(noeud_t *root){
-    int nbr_fils = len(root->liste_fils);
+    /*
+    Renvoie le score (1.0 victoire 0.0 défaite) de J sur le plateau après une descente.
+    */
+    int nbr_fils = generic_list_size(root->liste_fils);
 
-    if (nbr_fils == 0){
+    if (nbr_fils == 0 && root->statut == EC){
         // pas de fils à la feuille (jamais exploré) donc à générer
         piece_t nextJ = next_J (root->J);
         generation_fils(root->plateau, nextJ, root->liste_fils);
@@ -229,60 +261,62 @@ int exploration(noeud_t *root){
 
     if (nbr_fils > root->N){
         //fils générés mais pas tous explorés
-        noeud_t* fils=generic_list_head(root->liste_fils);
-        for(;fils!=generic_list_tail(root->liste_fils);fils=generic_list_next(fils)){
-            if (fils->N==0){
+        generic_list_elmt_t* fils = generic_list_head(root->liste_fils);
+        for(; fils != generic_list_tail(root->liste_fils); fils = generic_list_next(fils)){ // Je pense que le dernier elem n'est pas visité ?
+            if (fils->N == 0){ // Premier non vu 
                 piece_t nextJ = next_J(root->J);
                 int deep_max;
-                if (simulation(root->plateau, piece_t nextJ, &deep_max, &res)==0){
+                if (simulation(root->plateau, piece_t nextJ, &deep_max, &res) == 0){
                     return EXIT_FAIL;
                 }
-                if (res==0){
+                if (res == 0){ 
                     //défaite
                     if (deep_max==0){
-                        root->statut=D;
+                        root->statut = D; // Statut du noeud fils ? Donc inversion V et D ?
                     }else{
-                        root->statut=EN;
+                        root->statut = EC;
                     }
                 }else{
                     //victoire
-                    root->statut=EN;
-                    if (deep_max==0){
-                        root->statut=V;
+                    root->statut = EC; 
+                    if (deep_max == 0){
+                        root->statut = V;
                     }else{
-                        root->statut=EN;
+                        root->statut = EC;
                     }
                 }
                 //mise à jour du fils qui a été exploré
-                fils->N=1;
-                fils->n=res;
-                if (nextJ== B1 || nextJ==B2){
-                    res=1-res;
+                fils->N = 1;
+                fils->n = res;
+                if (nextJ == B1 || nextJ == B2){
+                    res = 1 - res;
                 }
-                break;
+                break; // On ne regard pas les autres fils tout de suite. 
             }
         }
-    }else if(nbr_fils==0){
-        //noeud sans fils donc son statut est défini comme V ou D, partie finie
-        if (statut==V){int res=1;
-        }else{int res=0;}
+    }else if(nbr_fils == 0){
+        // Noeud sans fils donc son statut est défini comme V ou D, partie finie
+        if (statut==V){int res = 1;
+        }else{int res = 0;}
     }else{
-        // noeud dont tous les fils ont été explorés au moins une fois
+        // Noeud dont tous les fils ont été explorés au moins une fois
         noeud_t* max_fils;
-        float max_MCTS=0;;
-        noeud_t* fils=generic_list_head(root->liste_fils);
-        for(;fils!=generic_list_tail(root->liste_fils);fils=generic_list_next(fils)){
-            if ((fils->n) /(fils->N) + sqrt(2)*sqrt(log((root->N)/ (fils->N))) > max_MCTS){
-                max_MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(log((root->N)/ (fils->N)));
+        float max_MCTS = 0;;
+        noeud_t* fils = generic_list_head(root->liste_fils);
+        for(; fils != generic_list_tail(root->liste_fils); fils = generic_list_next(fils)){
+            float MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(log((root->N)/ (fils->N))); // Pas de Pb fils->N non nul. 
+            if ( MCTS > max_MCTS){ 
+                max_MCTS = MCTS;
                 max_fils = fils;
             }
-            res=exploration(max_fils);
+            res = exploration(max_fils);
         }
     }
+
 // mise à jour du noeud courant
-root->N +=1;
-if (root->J == B1 || root->J == B2){
-    root->n +=res;
+root->N += 1;
+if (root->J == B1 || root->J == B2){  
+    root->n += res; // Je pense que c'est 1 - res ? 
     return res;
 }
 root->n += 1-res;

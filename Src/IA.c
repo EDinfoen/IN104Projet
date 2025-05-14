@@ -70,19 +70,20 @@ bool piece_mobile(int** plateau, int x, int y){
     }
     return false;
 }
-piece_t joueur_suiv(piece_t J){
+piece_t next_J(piece_t J){
+    // Renvoie le prochain joueur ou bobail
+    piece_t next_J;
     switch (J){
-        case J1 :
-        return B2;
-        case J2 :
-        return B1;
+        case J1:
+            next_J = B2;
         case B1 :
-        return J1;
-        case B2 :
-        return J2;
-        default:
-        return VIDE;
+            next_J = J1;
+        case J2:
+            next_J = B1;
+        case B2:
+            next_J = J2;
     }
+    return next_J;
 }
 
 int coup_aleatoire (int** plateau, piece_t joueur, coup_t* coup){
@@ -196,11 +197,11 @@ int simulation(int** plateau, piece_t J, int* deep_max, int* res){
         *deep_max += 1;
         coup_aleatoire(plateau_temp, J_act, coup); 
         mouvement(plateau_temp, coup);       
-        J_act = joueur_suiv(J_act);
+        J_act = next_J(J_act);
         //affichage(plateau);
    }
    if(*deep_max > DEEP){
-        *res = -1; // Profondeur dépasseé => defaite
+        *res = 0; // Profondeur dépasseé => defaite
         return EXIT_SUCCESS;
    }
    if(gagnant == J){
