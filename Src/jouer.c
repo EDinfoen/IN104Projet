@@ -14,6 +14,16 @@ int tour(int** plateau, coup_t* coup, piece_t J ){
     return EXIT_SUCCESS;
 }
 
+int tour_IA(int** plateau, coup_t* coup, noeud_t* root ){
+    /*
+    Exécute un tour : calcul le coup optimal, modification de la position du pion, affichage du nouvel état du plateau.
+    */
+    saisie_coup_IA(plateau, coup, root);
+    mouvement(plateau, coup);
+    affichage(plateau);
+
+    return EXIT_SUCCESS;
+}
 
 int jouer_pvp(){
     /*
@@ -123,12 +133,20 @@ int jouer_IA(){ // A FAIRE
 
     init(plateau);
 
-    printf("Symboles :\nJoueur J1 : x\nJoueur J2 : +\nBobail : o\n");
+    printf("Symboles :\nJoueur J1 : x\nIA : +\nBobail : o\n");
 
     if(affichage(plateau) == EXIT_FAIL){
         destroy(plateau); 
         return EXIT_FAIL;
     }
+
+    // Initialisation de l'IA
+
+    noeud_t* root;
+    init_noeud(root);
+    copier_plt(plateau, root->plateau);
+
+    piece_t IA = J2; // Joueur joué par l'IA
     
     // Début de la partie
 
@@ -144,22 +162,35 @@ int jouer_IA(){ // A FAIRE
     //Lors du 1er tour, pas de mvt du bobail.
     tour(plateau, coup, J1);
     
-    piece_t J_act = J2;
+    piece_t J_act = IA;
     piece_t gagnant = VIDE; // Par défaut
-    //bool fini = false;
+
 
     do{
-        tour(plateau, coup, BOBAIL); // Mouvement du Bobail
-           
-        if(fin(plateau, J_act, &gagnant)){
-            //gagnant = J_act;
-            break;
+        if( J_act == IA){// Tour de l'IA
+
+            tour_IA(plateau, coup, root); // Mouv du Bobail (contient le déplacement dans l'arbre)
+
+            if(fin(plateau, J_act, &gagnant)){
+                break;
+            }
+
+            tour_IA(plateau, coup, root); // Mouv du pion (contient le déplacement dans l'arbre)
+
+            J_act = 1 - J_act;
+        }else{// Tour du joueur
+            ///////////////////////////////////////////////////////// Ajouter les mouv dans l'arbre
+
+            tour(plateau, coup, BOBAIL); // Mouvement du Bobail 
+            
+            if(fin(plateau, J_act, &gagnant)){
+                break;
+            }
+
+            tour(plateau, coup, J_act); // Mouvement du pion
+        
+            J_act = 1 - J_act;
         }
-
-        tour(plateau, coup, J_act); // Mouvement du pion
-    
-        J_act = 1 - J_act;
-
     }while(!fin(plateau, J_act, &gagnant));
 
     // Fin de partie

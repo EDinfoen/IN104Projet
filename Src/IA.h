@@ -11,3 +11,4 @@ Le main a permis de tester coup_aleatoire pour le plateau initial.
 bool avancer(int xi, int yi, direction dir, int* xf, int* yf, int **plateau);
 bool piece_mobile(int** plateau, int x, int y);
 coup_t* coup_aleatoire (int** plateau, piece_t joueur);
+int simulation(int** plateau, piece_t J, int* deep_max, int* res);

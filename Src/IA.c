@@ -214,9 +214,11 @@ int simulation(int** plateau, piece_t J, int* deep_max, int* res){
 }
 
 
-int tour_IA(){
-    noeud_t* root;
-    init_noeud(root);
+int saisie_coup_IA(noeud_t* root, coup_t* coup){
+    /*
+    Attribue à coup le coup optimale après NB_DESC descentes dans l'arbre de racine root.
+    Attribue à root le noeud associé au coup à joué (déplacement dans l'arbre)
+    */
 
     for (int i = 0; i < 500; i++){
         exploration(root);
@@ -235,7 +237,6 @@ int tour_IA(){
         }
     }
     
-    coup_t* coup;
     int temp = code_coup;
     coup->yf = temp%10;
     temp = temp/10;
@@ -244,11 +245,11 @@ int tour_IA(){
     coup->yi = temp%10;
     temp = temp/10;
     coup->xi = temp%10;
-    
 
-
-
+    return EXIT_SUCCESS;
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////
 //Reprise du code de la fonction jouer pour tester coup aléatoire sur le plateau de départ.
