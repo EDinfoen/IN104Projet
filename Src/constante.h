@@ -17,10 +17,6 @@ Contient les constantes, les includes de bibliothèques standarts et certain typ
     #define DEEP 1000000
 
     typedef enum {J1, J2, BOBAIL, VIDE, B1, B2} piece_t;
-    typedef enum {V, D, EC} statut_t;
-    /*V = Victoire assurée;
-      D = Défaite assurée;
-      EC = partie En Cours (fin de partie avec simulation aléatoire)
-    */
+    
 
 #endif

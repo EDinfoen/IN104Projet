@@ -214,41 +214,6 @@ int simulation(int** plateau, piece_t J, int* deep_max, int* res){
 }
 
 
-int saisie_coup_IA(noeud_t* root, coup_t* coup){
-    /*
-    Attribue à coup le coup optimale après NB_DESC descentes dans l'arbre de racine root.
-    Attribue à root le noeud associé au coup à joué (déplacement dans l'arbre)
-    */
-
-    for (int i = 0; i < 500; i++){
-        exploration(root);
-    }
-    float ratio = 0.0;
-    int code = 9999;
-    noeud_t* next_root; 
-
-    generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
-    for(; elem != NULL; elem = generic_list_next(elem)){
-        noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
-        if(nd.n / nd.N > ratio){
-            ratio = nd.n / nd.N; //////////////////// DIV euclid
-            code = nd.code_coup;
-            next_root = nd;
-        }
-    }
-    
-    int temp = code_coup;
-    coup->yf = temp%10;
-    temp = temp/10;
-    coup->xf = temp%10;
-    temp = temp/10;
-    coup->yi = temp%10;
-    temp = temp/10;
-    coup->xi = temp%10;
-
-    return EXIT_SUCCESS;
-}
-
 
 
 ////////////////////////////////////////////////////////////////////////

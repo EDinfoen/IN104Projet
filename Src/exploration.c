@@ -12,9 +12,14 @@ typedef struct noeud_ {float n; int N; statut_t statut; int** plateau; piece_t J
 // J : joeur qui vient de jouer pour être dans la sitation actuelle
 // plateau : plateau actuel
 // code_coup : code pour passer du plateau père au plateau actuel
-// liste_fils : liste générique de noeud_t 
+// liste_fils : liste générique de noeud_t
 
-enum direction {N, NE, E, SE, S, SW, W, NW} ; // A supprimer après fusion
+typedef enum {V, D, EC} statut_t;
+    /*V = Victoire assurée;
+      D = Défaite assurée;
+      EC = partie En Cours (fin de partie avec simulation aléatoire)
+    */
+
 
 void print_noeud(noeud_t* nd){
     printf("#############################################\n");
@@ -36,48 +41,41 @@ void print_noeud_list(noeud_list_t* liste){
 }
 
 
-
-
-bool avancer(int xi, int yi, enum direction dir, int* xf, int* yf, int **plateau){ // A supprimer après fusion
+int saisie_coup_IA(noeud_t* root, coup_t* coup){
     /*
-    Vérifie que le pion se trouvant en (xi,yi) peut avancer d'une case dans la direction dir.
-    Si oui, elle modifie les pointeurs xf et yf pour qu'ils indiquent la case suivante.
-    */    
-    int x,y;
-    switch (dir)
-    {
-    case N:
-        x = xi; y = yi - 1;
-        break;
-    case NE:
-        x = xi + 1; y = yi - 1;
-        break;
-    case E : 
-        x = xi + 1; y = yi;
-        break;    
-    case SE:
-        x = xi + 1; y = yi + 1;
-        break;
-    case S:
-        x = xi; y = yi + 1;
-        break;
-    case SW:
-        x = xi - 1; y = yi + 1;
-        break;
-    case W:
-        x = xi - 1; y = yi;
-        break;
-    case NW:
-        x = xi - 1; y = yi - 1;
-        break;
+    Attribue à coup le coup optimale après NB_DESC descentes dans l'arbre de racine root.
+    Attribue à root le noeud associé au coup à joué (déplacement dans l'arbre)
+    */
+
+    for (int i = 0; i < 500; i++){
+        exploration(root);
     }
+    float ratio = 0.0;
+    int code = 9999;
+    noeud_t* next_root; 
 
-    // Vérification que la nouvelle case est dans le plateau et inoccupée.
+    generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
+    for(; elem != NULL; elem = generic_list_next(elem)){
+        noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
+        if(nd.n / nd.N > ratio){
+            ratio = nd.n / nd.N; //////////////////// DIV euclid
+            code = nd.code_coup;
+            next_root = nd;
+        }
+    }
+    
+    int temp = code_coup;
+    coup->yf = temp%10;
+    temp = temp/10;
+    coup->xf = temp%10;
+    temp = temp/10;
+    coup->yi = temp%10;
+    temp = temp/10;
+    coup->xi = temp%10;
 
-    if( 0 > x || x > (SIZE - 1) || y < 0 || y > (SIZE - 1) ){return false;}
-    if (plateau[x][y] == VIDE ){ *xf = x; *yf = y; return true;}
-    return false;
+    return EXIT_SUCCESS;
 }
+
 
 int init_noeud(noeud_t* noeud){
     /*
@@ -324,78 +322,4 @@ if (pere->J == B1 || pere->J == B2){
 }
 pere->n += 1-res;
 return 1-res;
-}
-
-////////////////////////// TESTS ////////////////////////////////
-// A supprimer après fusion
-
-
-
-
-int main(){
-
-    // Allocation du plateau
-    int** plateau; 
-    plateau = malloc(SIZE*sizeof(int*));
-    if(plateau == NULL){
-        printf("Erreur init: allocation (plateau)\n");
-        return EXIT_FAIL;
-    }
-    for(int i = 0; i < SIZE; i++){
-        plateau[i] = malloc(SIZE*sizeof(int));
-        if(plateau[i] == NULL){
-            printf("Erreur init: allocation (plateau[%d])\n", i);
-            for(int j = 0; j < i; j++){
-                free(plateau[i]);
-            }
-            free(plateau);
-            return EXIT_FAIL;
-        }
-    }
-
-    // Initialisation du plateau
-
-    init(plateau);
-
-    if(affichage(plateau) == EXIT_FAIL){
-        destroy(plateau); 
-        return EXIT_FAIL;
-    }
-
-    printf("Symboles :\nJoueur J1 : x\nJoueur J2 : +\nBobail : o\n");
-    coup_t* coup = malloc(sizeof(coup_t));
-    if (coup == NULL){
-        free(coup);
-        destroy(plateau);
-        printf("Erreur init : allocation (coup)");
-        return EXIT_FAIL;
-
-    }
-    
-    //Lors du 1er tour, pas de mvt du bobail.
-    saisie_coup(plateau, coup, J1);
-    mouvement(plateau, coup);
-    affichage(plateau);
-
-    noeud_list_t liste;
-
-    generic_list_init(&liste, NULL, NULL, NULL);
-    generation_fils(plateau, J1, &liste);
-    printf("%d\n", generic_list_size (&liste));
-    print_noeud_list(&liste);
-    
-
-    noeud_t noeud;
-    init_noeud(&noeud);
-    noeud.plateau=plateau;
-    exploration (&noeud);
-    print_noeud_list(noeud.liste_fils);
-    
-    int c=3;
-    float d=4.99;
-    d=d+c;
-    printf("\nd=%f",d);
-
-
-    return EXIT_SUCCESS;
 }
