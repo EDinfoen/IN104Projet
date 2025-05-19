@@ -245,44 +245,46 @@ piece_t next_J(piece_t J){
 }
 
 
-int exploration(noeud_t *root){
+int exploration(noeud_t *pere){
     /*
     Renvoie le score (1.0 victoire 0.0 défaite) de J sur le plateau après une descente.
     */
-    int nbr_fils = generic_list_size(root->liste_fils);
+    int nbr_fils = generic_list_size(pere->liste_fils);
 
-    if (nbr_fils == 0 && root->statut == EC){
+    if (nbr_fils == 0 && pere->statut == EC){
         // pas de fils à la feuille (jamais exploré) donc à générer
-        piece_t nextJ = next_J (root->J);
-        generation_fils(root->plateau, nextJ, root->liste_fils);
+        piece_t nextJ = next_J (pere->J);
+        generation_fils(pere->plateau, nextJ, pere->liste_fils);
     }
 
     int res;
 
-    if (nbr_fils > root->N){
+    if (nbr_fils > pere->N){
         //fils générés mais pas tous explorés
-        generic_list_elmt_t* fils = generic_list_head(root->liste_fils);
-        for(; fils != generic_list_tail(root->liste_fils); fils = generic_list_next(fils)){ // Je pense que le dernier elem n'est pas visité ?
+        generic_list_elmt_t* elmt = generic_list_head(pere->liste_fils);
+        for(; elmt != NULL; elmt = generic_list_next(elmt)){ // Je pense que le dernier elem n'est pas visité ?
+            noeud_t* fils=generic_list_data(elmt);
             if (fils->N == 0){ // Premier non vu 
-                piece_t nextJ = next_J(root->J);
+                
+                piece_t nextJ = next_J(pere->J);
                 int deep_max;
-                if (simulation(root->plateau, piece_t nextJ, &deep_max, &res) == 0){
+                if (simulation(pere->plateau, nextJ, &deep_max, &res) == 0){
                     return EXIT_FAIL;
                 }
                 if (res == 0){ 
                     //défaite
                     if (deep_max==0){
-                        root->statut = D; // Statut du noeud fils ? Donc inversion V et D ?
+                        fils->statut = D; // Statut du noeud fils ? Donc inversion V et D ?
                     }else{
-                        root->statut = EC;
+                        fils->statut = EC;
                     }
                 }else{
                     //victoire
-                    root->statut = EC; 
+                    fils->statut = EC; 
                     if (deep_max == 0){
-                        root->statut = V;
+                        fils->statut = V;
                     }else{
-                        root->statut = EC;
+                        fils->statut = EC;
                     }
                 }
                 //mise à jour du fils qui a été exploré
@@ -296,30 +298,31 @@ int exploration(noeud_t *root){
         }
     }else if(nbr_fils == 0){
         // Noeud sans fils donc son statut est défini comme V ou D, partie finie
-        if (statut==V){int res = 1;
-        }else{int res = 0;}
+        if (pere->statut==V){ res = 1;
+        }else{ res = 0;}
     }else{
         // Noeud dont tous les fils ont été explorés au moins une fois
-        noeud_t* max_fils;
+        noeud_t* max_elmt;
         float max_MCTS = 0;;
-        noeud_t* fils = generic_list_head(root->liste_fils);
-        for(; fils != generic_list_tail(root->liste_fils); fils = generic_list_next(fils)){
-            float MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(log((root->N)/ (fils->N))); // Pas de Pb fils->N non nul. 
+        generic_list_elmt_t* elmt = generic_list_head(pere->liste_fils);
+        for(; elmt != NULL; elmt = generic_list_next(elmt)){
+            noeud_t* fils=(noeud_t*)generic_list_data(elmt);
+            float MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(log((pere->N)/ (fils->N))); // Pas de Pb fils->N non nul. 
             if ( MCTS > max_MCTS){ 
                 max_MCTS = MCTS;
-                max_fils = fils;
+                max_elmt = fils;
             }
-            res = exploration(max_fils);
+            res = exploration(max_elmt);
         }
     }
 
 // mise à jour du noeud courant
-root->N += 1;
-if (root->J == B1 || root->J == B2){  
-    root->n += res; // Je pense que c'est 1 - res ? 
+pere->N += 1;
+if (pere->J == B1 || pere->J == B2){  
+    pere->n += res; // Je pense que c'est 1 - res ? 
     return res;
 }
-root->n += 1-res;
+pere->n += 1-res;
 return 1-res;
 }
 
@@ -388,6 +391,10 @@ int main(){
     exploration (&noeud);
     print_noeud_list(noeud.liste_fils);
     
+    int c=3;
+    float d=4.99;
+    d=d+c;
+    printf("\nd=%f",d);
 
 
     return EXIT_SUCCESS;
