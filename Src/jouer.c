@@ -18,7 +18,9 @@ int tour_IA(int** plateau, coup_t* coup, noeud_t* root ){
     Exécute un tour : calcul le coup optimal, modification de la position du pion, affichage du nouvel état du plateau.
     */
     saisie_coup_IA(root, coup);
+    printf("coup saisi\n");
     mouvement(plateau, coup);
+    printf("mouv\n");
     affichage(plateau);
 
     return EXIT_SUCCESS;
@@ -103,7 +105,7 @@ int jouer_pvp(){
     return EXIT_SUCCESS;
 }
 
-int jouer_IA(){ // A FAIRE
+int jouer_IA(){ 
     /*
     Implémente une partie de joueur contre IA. La fonciton s'arrête quand l'un d'eux a gagné.
     */
@@ -142,6 +144,10 @@ int jouer_IA(){ // A FAIRE
     // Initialisation de l'IA
 
     noeud_t* root=malloc(sizeof(noeud_t));
+    if (root==NULL){
+        printf("Erreur init: allocation root\n");
+        return EXIT_FAIL;
+    }
     init_noeud(root);
     copier_plt(plateau, root->plateau);
 
@@ -155,7 +161,6 @@ int jouer_IA(){ // A FAIRE
         destroy(plateau);
         printf("Erreur init : allocation (coup)");
         return EXIT_FAIL;
-
     }
     
     //Lors du 1er tour, pas de mvt du bobail.
@@ -167,15 +172,15 @@ int jouer_IA(){ // A FAIRE
 
     do{
         if( J_act == IA){// Tour de l'IA
-
+            printf("IA\n");
             tour_IA(plateau, coup, root); // Mouv du Bobail (contient le déplacement dans l'arbre)
-
+            printf("BIA\n");
             if(fin(plateau, J_act, &gagnant)){
                 break;
             }
 
             tour_IA(plateau, coup, root); // Mouv du pion (contient le déplacement dans l'arbre)
-
+            printf("PIA\n");
             J_act = 1 - J_act;
         }else{// Tour du joueur
             ///////////////////////////////////////////////////////// Ajouter les mouv dans l'arbre

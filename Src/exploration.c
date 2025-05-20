@@ -187,7 +187,7 @@ int exploration(noeud_t *pere){
 
     if (nbr_fils == 0 && pere->statut == EC){
         // pas de fils à la feuille (jamais exploré) donc à générer
-        piece_t nextJ = next_J (pere->J);
+        piece_t nextJ = next_J(pere->J);
         generation_fils(pere->plateau, nextJ, pere->liste_fils);
     }
 
@@ -281,9 +281,6 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
     return EXIT_SUCCESS;
 }
 
-<<<<<<< HEAD
-
-=======
 int deplacement_arbre(noeud_t* root, coup_t* coup){
     int code = ((coup->xi*10 + coup->yi)*10 + coup->xf)*10 + coup->yf;
     generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
@@ -296,4 +293,3 @@ int deplacement_arbre(noeud_t* root, coup_t* coup){
         }
 return EXIT_FAIL;
 }
->>>>>>> b26ea0059d144f78b06b11bdca3f5745e556ec08
