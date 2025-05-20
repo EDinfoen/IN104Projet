@@ -3,6 +3,7 @@
 
 
 enum direction {N, NE, E, SE, S, SW, W, NW} ;
+
 void copier_plt(int** source, int** destination){ // Il existe peut-être plus efficasse ?
     for(int i = 0; i < SIZE; i++){
         for(int j = 0; j < SIZE; j++){
@@ -82,6 +83,8 @@ piece_t next_J(piece_t J){
             next_J = B1;
         case B2:
             next_J = J2;
+        default:
+            next_J = VIDE;
     }
     return next_J;
 }
@@ -187,7 +190,7 @@ int simulation(int** plateau, piece_t J, int* deep_max, int* res){
 
 
 
-   piece_t J_act = J;
+   piece_t J_act = next_J(J);
    piece_t gagnant = VIDE;
    coup_t* coup = malloc(sizeof(coup_t));
    if(coup == NULL){

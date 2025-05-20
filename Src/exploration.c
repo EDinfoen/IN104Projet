@@ -1,9 +1,14 @@
-#include "annexe.h"
-#include "affichage.h"
 #include "generic_list.h"
 #include <math.h>
+#include "evaluation.h"
 
 typedef generic_list_t noeud_list_t; 
+
+typedef enum {V, D, EC} statut_t;
+    /*V = Victoire assurée;
+      D = Défaite assurée;
+      EC = partie En Cours (fin de partie avec simulation aléatoire)
+    */
 
 typedef struct noeud_ {float n; int N; statut_t statut; int** plateau; piece_t J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
 // n : Nombre de victoires de J 
@@ -14,11 +19,6 @@ typedef struct noeud_ {float n; int N; statut_t statut; int** plateau; piece_t J
 // code_coup : code pour passer du plateau père au plateau actuel
 // liste_fils : liste générique de noeud_t
 
-typedef enum {V, D, EC} statut_t;
-    /*V = Victoire assurée;
-      D = Défaite assurée;
-      EC = partie En Cours (fin de partie avec simulation aléatoire)
-    */
 
 
 void print_noeud(noeud_t* nd){
@@ -40,41 +40,6 @@ void print_noeud_list(noeud_list_t* liste){
   }
 }
 
-
-int saisie_coup_IA(noeud_t* root, coup_t* coup){
-    /*
-    Attribue à coup le coup optimale après NB_DESC descentes dans l'arbre de racine root.
-    Attribue à root le noeud associé au coup à joué (déplacement dans l'arbre)
-    */
-
-    for (int i = 0; i < 500; i++){
-        exploration(root);
-    }
-    float ratio = 0.0;
-    int code = 9999;
-    noeud_t* next_root; 
-
-    generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
-    for(; elem != NULL; elem = generic_list_next(elem)){
-        noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
-        if(nd.n / nd.N > ratio){
-            ratio = nd.n / nd.N; //////////////////// DIV euclid
-            code = nd.code_coup;
-            next_root = nd;
-        }
-    }
-    
-    int temp = code_coup;
-    coup->yf = temp%10;
-    temp = temp/10;
-    coup->xf = temp%10;
-    temp = temp/10;
-    coup->yi = temp%10;
-    temp = temp/10;
-    coup->xi = temp%10;
-
-    return EXIT_SUCCESS;
-}
 
 
 int init_noeud(noeud_t* noeud){
@@ -120,13 +85,6 @@ int init_noeud(noeud_t* noeud){
     return EXIT_SUCCESS;
 }
 
-void copier_plt(int** source, int** destination){ // Il existe peut-être plus efficasse ?
-    for(int i = 0; i < SIZE; i++){
-        for(int j = 0; j < SIZE; j++){
-            destination[i][j] = source[i][j];
-        }
-    }
-}
 
 
 int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ 
@@ -219,28 +177,6 @@ int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){
 }
 
 
-piece_t next_J(piece_t J){
-    // Renvoie le prochain joueur ou bobail
-    piece_t next_J;
-    switch (J){
-        case J1:
-            next_J = B2;
-            break;
-        case B1 :
-            next_J = J1;
-            break;
-        case J2:
-            next_J = B1;
-            break;
-        case B2:
-            next_J = J2;
-            break;
-        default:
-            next_J = VIDE;
-            break;
-    }
-    return next_J;
-}
 
 
 int exploration(noeud_t *pere){
@@ -260,38 +196,26 @@ int exploration(noeud_t *pere){
     if (nbr_fils > pere->N){
         //fils générés mais pas tous explorés
         generic_list_elmt_t* elmt = generic_list_head(pere->liste_fils);
-        for(; elmt != NULL; elmt = generic_list_next(elmt)){ // Je pense que le dernier elem n'est pas visité ?
-            noeud_t* fils=generic_list_data(elmt);
+        for(; elmt != NULL; elmt = generic_list_next(elmt)){
+            noeud_t* fils=(noeud_t*)generic_list_data(elmt);
             if (fils->N == 0){ // Premier non vu 
                 
-                piece_t nextJ = next_J(pere->J);
                 int deep_max;
-                if (simulation(pere->plateau, nextJ, &deep_max, &res) == 0){
+                if (simulation(fils->plateau, fils->J, &deep_max, &res) == 0){
                     return EXIT_FAIL;
                 }
+                fils->statut=EC;
                 if (res == 0){ 
-                    //défaite
-                    if (deep_max==0){
-                        fils->statut = D; // Statut du noeud fils ? Donc inversion V et D ?
-                    }else{
-                        fils->statut = EC;
-                    }
+                    //défaite de fils->J
+                    if (deep_max==0){fils->statut = D;}
                 }else{
                     //victoire
-                    fils->statut = EC; 
-                    if (deep_max == 0){
-                        fils->statut = V;
-                    }else{
-                        fils->statut = EC;
-                    }
+                    if (deep_max == 0){fils->statut = V;}
                 }
                 //mise à jour du fils qui a été exploré
                 fils->N = 1;
                 fils->n = res;
-                if (nextJ == B1 || nextJ == B2){
-                    res = 1 - res;
-                }
-                break; // On ne regard pas les autres fils tout de suite. 
+                break; // On ne regarde pas les autres fils tout de suite. 
             }
         }
     }else if(nbr_fils == 0){
@@ -301,7 +225,7 @@ int exploration(noeud_t *pere){
     }else{
         // Noeud dont tous les fils ont été explorés au moins une fois
         noeud_t* max_elmt;
-        float max_MCTS = 0;;
+        float max_MCTS = 0;
         generic_list_elmt_t* elmt = generic_list_head(pere->liste_fils);
         for(; elmt != NULL; elmt = generic_list_next(elmt)){
             noeud_t* fils=(noeud_t*)generic_list_data(elmt);
@@ -310,16 +234,49 @@ int exploration(noeud_t *pere){
                 max_MCTS = MCTS;
                 max_elmt = fils;
             }
-            res = exploration(max_elmt);
+            res = exploration(max_elmt);//resultat pour le pere
         }
     }
 
 // mise à jour du noeud courant
 pere->N += 1;
-if (pere->J == B1 || pere->J == B2){  
-    pere->n += res; // Je pense que c'est 1 - res ? 
-    return res;
+pere->n += res;
+
+if (pere->J == B1 || pere->J == B2){ return 1-res;}
+return res;
 }
-pere->n += 1-res;
-return 1-res;
+
+
+int saisie_coup_IA(noeud_t* root, coup_t* coup){
+    /*
+    Attribue à coup le coup optimale après NB_DESC descentes dans l'arbre de racine root.
+    Attribue à root le noeud associé au coup à joué (déplacement dans l'arbre)
+    */
+
+    for (int i = 0; i < 500; i++){
+        exploration(root);
+    }
+    float ratio = 0.0;
+    int code = 9999;
+
+    generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
+    for(; elmt != NULL; elmt = generic_list_next(elmt)){
+        noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
+        if(nd->n/ nd->N > ratio){
+            ratio = nd->n / nd->N; //////////////////// DIV euclid
+            code = nd->code_coup;
+            root = nd;
+        }
+    }
+    
+    int temp = code;
+    coup->yf = temp%10;
+    temp = temp/10;
+    coup->xf = temp%10;
+    temp = temp/10;
+    coup->yi = temp%10;
+    temp = temp/10;
+    coup->xi = temp%10;
+
+    return EXIT_SUCCESS;
 }

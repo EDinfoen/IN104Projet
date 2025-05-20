@@ -1,9 +1,14 @@
-#include "annexe.h"
-#include "affichage.h"
 #include "generic_list.h"
 #include <math.h>
+#include "evaluation.h"
 
 typedef generic_list_t noeud_list_t; 
+
+typedef enum {V, D, EC} statut_t;
+    /*V = Victoire assurée;
+      D = Défaite assurée;
+      EC = partie En Cours (fin de partie avec simulation aléatoire)
+    */
 
 typedef struct noeud_ {float n; int N; statut_t statut; int** plateau; piece_t J; int code_coup; noeud_list_t* liste_fils;} noeud_t;
 // n : Nombre de victoires de J 
@@ -14,11 +19,7 @@ typedef struct noeud_ {float n; int N; statut_t statut; int** plateau; piece_t J
 // code_coup : code pour passer du plateau père au plateau actuel
 // liste_fils : liste générique de noeud_t
 
-typedef enum {V, D, EC} statut_t;
-    /*V = Victoire assurée;
-      D = Défaite assurée;
-      EC = partie En Cours (fin de partie avec simulation aléatoire)
-    */
+
 
 void print_noeud(noeud_t* nd);
 void print_noeud_list(noeud_list_t* liste);
