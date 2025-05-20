@@ -280,3 +280,5 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
 
     return EXIT_SUCCESS;
 }
+
+
