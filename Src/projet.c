@@ -1,6 +1,6 @@
 #include "jouer.h"
 
-int main (int argc, char** argv){
+int main (){
     int jeu;
     do{
         printf("Pour jouer contre une IA, entrer 0. \nPour jouer contre un autre joueur, entrer 1.\n");

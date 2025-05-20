@@ -1,6 +1,5 @@
 #include "affichage.h"
-#include "annexe.h"
-
+#include "exploration.h"
 
 
 int tour(int** plateau, coup_t* coup, piece_t J ){
@@ -18,7 +17,7 @@ int tour_IA(int** plateau, coup_t* coup, noeud_t* root ){
     /*
     Exécute un tour : calcul le coup optimal, modification de la position du pion, affichage du nouvel état du plateau.
     */
-    saisie_coup_IA(plateau, coup, root);
+    saisie_coup_IA(root, coup);
     mouvement(plateau, coup);
     affichage(plateau);
 
@@ -142,7 +141,7 @@ int jouer_IA(){ // A FAIRE
 
     // Initialisation de l'IA
 
-    noeud_t* root;
+    noeud_t* root=malloc(sizeof(noeud_t));
     init_noeud(root);
     copier_plt(plateau, root->plateau);
 
@@ -182,13 +181,19 @@ int jouer_IA(){ // A FAIRE
             ///////////////////////////////////////////////////////// Ajouter les mouv dans l'arbre
 
             tour(plateau, coup, BOBAIL); // Mouvement du Bobail 
-            
+            if (deplacement_arbre(root, coup)!=EXIT_SUCCESS){
+                printf("Erreur dep arbre");
+                return EXIT_FAIL;
+            }
             if(fin(plateau, J_act, &gagnant)){
                 break;
             }
 
             tour(plateau, coup, J_act); // Mouvement du pion
-        
+            if (deplacement_arbre(root, coup)!=EXIT_SUCCESS){
+                printf("Erreur dep arbre");
+                return EXIT_FAIL;
+            }
             J_act = 1 - J_act;
         }
     }while(!fin(plateau, J_act, &gagnant));

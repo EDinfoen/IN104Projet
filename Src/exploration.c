@@ -229,7 +229,7 @@ int exploration(noeud_t *pere){
         generic_list_elmt_t* elmt = generic_list_head(pere->liste_fils);
         for(; elmt != NULL; elmt = generic_list_next(elmt)){
             noeud_t* fils=(noeud_t*)generic_list_data(elmt);
-            float MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(log((pere->N)/ (fils->N))); // Pas de Pb fils->N non nul. 
+            float MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(logf((pere->N)/ (fils->N))); // Pas de Pb fils->N non nul. 
             if ( MCTS > max_MCTS){ 
                 max_MCTS = MCTS;
                 max_elmt = fils;
@@ -281,4 +281,19 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
     return EXIT_SUCCESS;
 }
 
+<<<<<<< HEAD
 
+=======
+int deplacement_arbre(noeud_t* root, coup_t* coup){
+    int code = ((coup->xi*10 + coup->yi)*10 + coup->xf)*10 + coup->yf;
+    generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
+        for(; elmt != NULL; elmt = generic_list_next(elmt)){
+            noeud_t* fils=(noeud_t*)generic_list_data(elmt);
+            if (fils->code_coup==code){
+                root=fils;
+                return EXIT_SUCCESS;
+            }
+        }
+return EXIT_FAIL;
+}
+>>>>>>> b26ea0059d144f78b06b11bdca3f5745e556ec08

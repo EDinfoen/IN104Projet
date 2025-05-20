@@ -3,7 +3,7 @@ CFLAGS=-Wall -Werror
 all: projet.x
 
 projet.o: projet.c jouer.h
-	$(CC) $(CFLAGS) -c projet.c -o projet.o
+	$(CC) $(CFLAGS) -c projet.c -o projet.o -lm
 
 affichage.o: affichage.c constante.h 
 	$(CC) $(CFLAGS) -c affichage.c -o affichage.o
@@ -11,14 +11,20 @@ affichage.o: affichage.c constante.h
 annexe.o: annexe.c constante.h 
 	$(CC) $(CFLAGS) -c annexe.c -o annexe.o
 
-jouer.o: jouer.c affichage.h annexe.h
+jouer.o: jouer.c affichage.h exploration.h
 	$(CC) $(CFLAGS)  -c jouer.c -o jouer.o
 
 generic_list.o: generic_list.c constante.h
 	$(CC) $(CFLAGS)  -c generic_list.c -o generic_list.o
 
-projet.x: projet.o jouer.o affichage.o annexe.o
-	$(CC) projet.o jouer.o annexe.o affichage.o -o projet.x
+exploration.o: exploration.c generic_list.h evaluation.h 
+	$(CC) $(CFLAGS) -c exploration.c -o $@ -lm
+
+evaluation.o : evaluation.c affichage.h annexe.h
+	$(CC) $(CFLAGS) -c evaluation.c -o $@
+
+projet.x: projet.o exploration.o evaluation.o generic_list.o jouer.o annexe.o affichage.o
+	$(CC) $^  -o projet.x -lm
 
 evaluation.x: evaluation.c affichage.o annexe.o constante.h
 	$(CC) $(CFLAGS) $^ -o $@

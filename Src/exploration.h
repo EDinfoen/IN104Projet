@@ -27,3 +27,4 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup);
 int init_noeud(noeud_t* noeud);
 int generation_fils(int** plateau, piece_t J, noeud_list_t* liste);
 int exploration(noeud_t *pere);
+int deplacement_arbre(noeud_t* root, coup_t* coup);
