@@ -25,6 +25,8 @@ void print_noeud(noeud_t* nd);
 void print_noeud_list(noeud_list_t* liste);
 int saisie_coup_IA(noeud_t* root, coup_t* coup);
 int init_noeud(noeud_t* noeud);
+void copier_plt(int** source, int** destination);
 int generation_fils(int** plateau, piece_t J, noeud_list_t* liste);
+piece_t next_J(piece_t J);
 int exploration(noeud_t *pere);
 int deplacement_arbre(noeud_t* root, coup_t* coup);
