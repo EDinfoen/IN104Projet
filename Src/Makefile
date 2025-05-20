@@ -23,7 +23,7 @@ projet.x: projet.o jouer.o affichage.o annexe.o
 evaluation.x: evaluation.c affichage.o annexe.o constante.h
 	$(CC) $(CFLAGS) $^ -o $@
 
-exploration.x: exploration.c affichage.o annexe.o generic_list.o constante.h
+exploration.x: exploration.c affichage.o annexe.o generic_list.o evaluation.o constante.h -lm
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
