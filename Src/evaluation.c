@@ -2,7 +2,7 @@
 #include "affichage.h"
 
 
-enum direction {N, NE, E, SE, S, SW, W, NW} ;
+enum direction {N, NE, E, SE, S, SW, W, NW};
 void copier_plt(int** source, int** destination){ // Il existe peut-être plus efficasse ?
     for(int i = 0; i < SIZE; i++){
         for(int j = 0; j < SIZE; j++){
