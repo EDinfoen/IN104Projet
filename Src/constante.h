@@ -11,7 +11,6 @@ Contient les constantes, les includes de bibliothèques standarts et certain typ
     #include <time.h>
 
     #define EXIT_FAIL 1
-    #define EXIT_SUCCESS 0
 
     #define SIZE 5
     #define DEEP 1000000

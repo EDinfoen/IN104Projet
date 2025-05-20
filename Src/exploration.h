@@ -29,3 +29,4 @@ void copier_plt(int** source, int** destination);
 int generation_fils(int** plateau, piece_t J, noeud_list_t* liste);
 piece_t next_J(piece_t J);
 int exploration(noeud_t *pere);
+int deplacement_arbre(noeud_t* root, coup_t* coup);

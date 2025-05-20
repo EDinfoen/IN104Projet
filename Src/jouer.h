@@ -1,5 +1,5 @@
 #include "affichage.h"
-#include "annexe.h"
+#include "exploration.h"
 /*
 Contient les fonctions pour jouer une partie tour après tour. 
 */
