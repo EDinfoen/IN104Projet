@@ -19,7 +19,8 @@ int tour_IA(int** plateau, coup_t* coup, noeud_t* root ){
     */
     saisie_coup_IA(root, coup);
     printf("coup saisi\n");
-    mouvement(plateau, coup);
+    printf("%d,%d,%d,%d\n",coup->xi,coup->yi,coup->xf,coup->yf);
+    //mouvement(plateau, coup);
     printf("mouv\n");
     affichage(plateau);
 

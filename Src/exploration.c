@@ -256,6 +256,9 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
     for (int i = 0; i < 500; i++){
         exploration(root);
     }
+    printf("Nbr fils = %d\n",generic_list_size(root->liste_fils));
+    printf("exploré\n");
+    print_noeud_list(root->liste_fils);
     float ratio = 0.0;
     int code = 9999;
 
@@ -283,6 +286,7 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
 
 int deplacement_arbre(noeud_t* root, coup_t* coup){
     int code = ((coup->xi*10 + coup->yi)*10 + coup->xf)*10 + coup->yf;
+    printf("%d,%d,%d,%d\n",coup->xi,coup->yi,coup->xf,coup->yf);
     generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
         for(; elmt != NULL; elmt = generic_list_next(elmt)){
             noeud_t* fils=(noeud_t*)generic_list_data(elmt);
