@@ -77,14 +77,19 @@ piece_t next_J(piece_t J){
     switch (J){
         case J1:
             next_J = B2;
+            break;
         case B1 :
             next_J = J1;
+            break;
         case J2:
             next_J = B1;
+            break;
         case B2:
             next_J = J2;
+            break;
         default:
             next_J = VIDE;
+            break;
     }
     return next_J;
 }
