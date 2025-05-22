@@ -64,7 +64,7 @@ bool piece_mobile(int** plateau, int x, int y){
     //Parcours des 9 cases alentours du pion.
     for(int i = -1; i < 2; i++){
         for(int j = -1; j < 2; j++){
-            if (0 < x+i && x+i < (SIZE - 1) && y+j > 0 && y+j < (SIZE - 1)){
+            if (0 <= x+i && x+i <= (SIZE - 1) && y+j >= 0 && y+j <= (SIZE - 1)){ ///////////: J'ai mis des inégalités larges
                 if (plateau[x + i][y + j] == VIDE){return true;}
             }
         }
@@ -100,7 +100,8 @@ int coup_aleatoire (int** plateau, piece_t joueur, coup_t* coup){
     Allocation de la mémoire du coup retourné.
     */
     srand(time(NULL));
-    int xi, yi;
+    int xi = 0;
+    int yi = 0;
     if (joueur == J1 || joueur == J2){
         //on récupère les positions de pions
         int pions[SIZE];
@@ -127,6 +128,7 @@ int coup_aleatoire (int** plateau, piece_t joueur, coup_t* coup){
             yi = pions[k]%10;
             //printf("%d,%d", xi, yi);
             if(!piece_mobile(plateau, xi, yi)){
+
                 pions[k] = pions[nbr_pions];
                 nbr_pions--;
                 //printf("bloque\n");
@@ -177,9 +179,11 @@ int simulation(int** plateau, piece_t J, int* deep_max, int* res){
     */
 
     int** plateau_temp = malloc(SIZE*sizeof(int*));
+
     if(plateau_temp == NULL){
         return EXIT_FAIL;
     }
+
     for (int i = 0; i < SIZE; i++){
         plateau_temp[i] =malloc(SIZE*sizeof(int));
         if(plateau_temp[i] == NULL){
@@ -190,29 +194,30 @@ int simulation(int** plateau, piece_t J, int* deep_max, int* res){
         return EXIT_FAIL;
         }
     }
+
     copier_plt(plateau, plateau_temp);
 
-
-
-
-   piece_t J_act = next_J(J);
-   piece_t gagnant = VIDE;
+   piece_t J_act = J;
+   piece_t gagnant = J;
    coup_t* coup = malloc(sizeof(coup_t));
    if(coup == NULL){
        return EXIT_FAIL;
    }
-   while(!fin(plateau_temp, J_act, &gagnant) && (*deep_max <= DEEP)){
+
+   while(!fin(plateau_temp, J_act, &gagnant) && (*deep_max <= DEEP)){ // Gagnant prend la valeur J1 ou J2
+        J_act = next_J(J_act);
         *deep_max += 1;
         coup_aleatoire(plateau_temp, J_act, coup); 
         mouvement(plateau_temp, coup);       
-        J_act = next_J(J_act);
+        
         //affichage(plateau);
    }
    if(*deep_max > DEEP){
         *res = 0; // Profondeur dépasseé => defaite
         return EXIT_SUCCESS;
    }
-   if(gagnant == J){
+   
+   if(gagnant%2 == J%2){
         *res =  1;
         return EXIT_SUCCESS;
    }else{

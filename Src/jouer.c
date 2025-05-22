@@ -134,7 +134,8 @@ int jouer_IA(){
 
     // Initialisation du plateau
 
-    init(plateau);
+   init(plateau);
+    //init_test(plateau);///////////////////////////////////////////
 
     printf("Symboles :\nJoueur J1 : x\nIA : +\nBobail : o\n");
 
@@ -153,10 +154,11 @@ int jouer_IA(){
     init_noeud(root);
     copier_plt(plateau, root->plateau);
     root->J = B1;
+    //root->J = J1;
     piece_t IA = J2; // Joueur joué par l'IA
     
     // Début de la partie
-
+    
     coup_t* coup = malloc(sizeof(coup_t));
     if (coup == NULL){
         free(coup);
@@ -166,6 +168,8 @@ int jouer_IA(){
     }
     
     //Lors du 1er tour, pas de mvt du bobail.
+    
+     ///////////////////////////////////////////
     tour(plateau, coup, J1);
     //print_noeud(root);
     if (deplacement_arbre(root, coup)!=EXIT_SUCCESS){
@@ -173,6 +177,8 @@ int jouer_IA(){
         return EXIT_FAIL;
     }
     //print_noeud(root);
+
+    
     
     piece_t J_act = IA;
     piece_t gagnant = VIDE; // Par défaut
