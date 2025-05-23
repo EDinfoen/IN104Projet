@@ -13,7 +13,7 @@ Contient les constantes, les includes de bibliothèques standarts et certain typ
     #define EXIT_FAIL 1
 
     #define SIZE 5
-    #define DEEP 1000000
+    #define DEEP 100
 
     typedef enum {J1, J2, BOBAIL, VIDE, B1, B2} piece_t;
     

@@ -154,11 +154,12 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
     coup->yf = yf;
 
     int verif = 0;
-    do{
+     do{
         char c = ' '; // Séparateur et saut de ligne
-        if(J == J1 || J == J2){ // Déplacement Joueur
-            char c_xf = ' ';
+        char c_xf = ' ';
             char c_xi = ' ';
+        if(J == J1 || J == J2){ // Déplacement Joueur
+            
             printf("Joueur %d : mouvement pion (Format:A0 A0) :", J+1);
             verif = scanf("%c%d%c%c%d%c", &c_xi, &yi, &c, &c_xf, &yf, &c); // Saisie case départ
             if( verif == 6 && c== '\n'){
@@ -175,7 +176,7 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
         }
         if(J == BOBAIL){ // Déplacement Bobail
             printf("Joueur %d : mouvement Bobail (Format:A0) :", J+1);
-            char c_xf = ' ';
+            char c = ' '; //c et noncxf
             verif = scanf("%c%d%c", &c_xf, &yf, &c);
             if( verif == 3){
                 localisation_bobail(plateau,&(coup->xi), &(coup->yi));
@@ -228,19 +229,18 @@ int fin(int** plateau, piece_t J_act, piece_t* gagnant){
 
     // Verification des cases libres autour du Bobail
 
-    bool h = (x > 0)&&(plateau[x-1][y] == VIDE);
-    bool hg = (x > 0)&&(y > 0)&&(plateau[x-1][y-1] == VIDE);
-    bool hd = (x > 0)&&(y < SIZE - 1)&&(plateau[x-1][y+1] == VIDE);
-    bool g = (y > 0)&&(plateau[x][y-1] == VIDE);
-    bool d = (y < SIZE - 1)&&(plateau[x][y+1] == VIDE);
-    bool b = (x < SIZE - 1)&&(plateau[x+1][y] == VIDE);
-    bool bg = (x < SIZE - 1)&&(y > 0)&&(plateau[x+1][y-1] == VIDE);
-    bool bd = (x < SIZE - 1)&&(y < SIZE - 1)&&(plateau[x+1][y+1] == VIDE);
+    bool h = (x > 0)&&(plateau[x-1][y] != VIDE);
+    bool hg = (x > 0)&&(y > 0)&&(plateau[x-1][y-1] != VIDE);
+    bool hd = (x > 0)&&(y < SIZE - 1)&&(plateau[x-1][y+1] != VIDE);
+    bool g = (y > 0)&&(plateau[x][y-1] != VIDE);
+    bool d = (y < SIZE - 1)&&(plateau[x][y+1] != VIDE);
+    bool b = (x < SIZE - 1)&&(plateau[x+1][y] != VIDE);
+    bool bg = (x < SIZE - 1)&&(y > 0)&&(plateau[x+1][y-1] != VIDE);
+    bool bd = (x < SIZE - 1)&&(y < SIZE - 1)&&(plateau[x+1][y+1] != VIDE);
 
     
 
-    if(!(h||hg||hd||g||d||b||bg||bd)){ 
-        printf("Bloqué !\n");
+    if((h && hg && hd && g && d && b && bg && bd)){ 
         fini = true;
         *gagnant = J_act;
     }

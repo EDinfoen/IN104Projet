@@ -21,7 +21,7 @@ int tour_IA(int** plateau, coup_t* coup, noeud_t* root ){
     saisie_coup_IA(root, coup);
     printf("coup saisi\n");
     printf("%d,%d,%d,%d\n",coup->xi,coup->yi,coup->xf,coup->yf);
-    //mouvement(plateau, coup);
+    mouvement(plateau, coup);
     printf("mouv\n");
     affichage(plateau);
         //printf("FIN COUP IA\n");
@@ -143,17 +143,7 @@ int jouer_IA(){
         return EXIT_FAIL;
     }
 
-    // Initialisation de l'IA
-
-    noeud_t* root=malloc(sizeof(noeud_t));
-    if (root==NULL){
-        printf("Erreur init: allocation root\n");
-        return EXIT_FAIL;
-    }
-    init_noeud(root);
-    copier_plt(plateau, root->plateau);
-    root->J = B1;
-    piece_t IA = J2; // Joueur joué par l'IA
+    
     
     // Début de la partie
 
@@ -167,11 +157,26 @@ int jouer_IA(){
     
     //Lors du 1er tour, pas de mvt du bobail.
     tour(plateau, coup, J1);
-    //print_noeud(root);
-    if (deplacement_arbre(root, coup)!=EXIT_SUCCESS){
+    // Initialisation de l'IA
+
+    noeud_t* root=malloc(sizeof(noeud_t)); 
+    if (root==NULL){
+        printf("Erreur init: allocation root\n");
+        return EXIT_FAIL;
+    }
+    init_noeud(root);
+    printf("init root");
+    copier_plt(plateau, root->plateau);
+    printf("copié");
+    root->J = J1;
+    piece_t IA = J2; // Joueur joué par l'IA
+
+    print_noeud(root);
+    /*if (deplacement_arbre(root, coup)!=EXIT_SUCCESS){
         printf("Erreur dep arbre");
         return EXIT_FAIL;
     }
+    printf("déplacé");*/
     //print_noeud(root);
     
     piece_t J_act = IA;
@@ -183,12 +188,15 @@ int jouer_IA(){
   
             //print_noeud(root);
             tour_IA(plateau, coup, root); // Mouv du Bobail (contient le déplacement dans l'arbre)
-            //print_noeud(root);
+            print_noeud_list(root->liste_fils);
+            affichage(plateau);
             if(fin(plateau, J_act, &gagnant)){
                 break;
             }
 
             tour_IA(plateau, coup, root); // Mouv du pion (contient le déplacement dans l'arbre)
+            print_noeud_list(root->liste_fils);
+            affichage(plateau);
             //printf("PIA\n");
             J_act = 1 - J_act;
         }else{// Tour du joueur
@@ -199,6 +207,7 @@ int jouer_IA(){
                 printf("Erreur dep arbre");
                 return EXIT_FAIL;
             }
+            printf("déplacé");
             if(fin(plateau, J_act, &gagnant)){
                 break;
             }
@@ -208,6 +217,7 @@ int jouer_IA(){
                 printf("Erreur dep arbre");
                 return EXIT_FAIL;
             }
+            printf("déplacé");
             J_act = 1 - J_act;
         }
     }while(!fin(plateau, J_act, &gagnant));

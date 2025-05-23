@@ -14,7 +14,7 @@ typedef struct noeud_ {float n; int N; statut_t statut; int** plateau; piece_t J
 // n : Nombre de victoires de J 
 // N : nombre d'explorations 
 // statut : état partie pour J
-// J : joeur qui vient de jouer pour être dans la sitation actuelle
+// J : joueur qui vient de jouer pour être dans la sitation actuelle
 // plateau : plateau actuel
 // code_coup : code pour passer du plateau père au plateau actuel
 // liste_fils : liste générique de noeud_t
