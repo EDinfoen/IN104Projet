@@ -16,6 +16,33 @@ int abs(int x){
     return x;
 }
 
+int init_test(int** plateau){
+    /*
+    Initialise le plateau en attribuant les valeurs aux cases contenant des pions. 
+    Ne fait pas l'allocation mémoire.
+    */
+    
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE ; j++){
+            plateau[i][j] = VIDE;
+        }
+    }
+    plateau[SIZE/2][SIZE/2] = BOBAIL;
+    plateau[4][0] = J1;
+    plateau[1][1] = J1;
+    plateau[1][2] = J1;
+    plateau[0][2] = J1;
+    plateau[0][3] = J1;
+
+    plateau[0][4] = J2;
+    plateau[1][4] = J2;
+    plateau[2][3] = J2;
+    plateau[2][4] = J2;
+    plateau[4][4] = J2;
+
+    return EXIT_SUCCESS;
+}
+
 int init(int** plateau){
     /*
     Initialise le plateau en attribuant les valeurs aux cases contenant des pions. 
@@ -207,8 +234,9 @@ int mouvement(int** plateau, coup_t* coup){
 
 
 
-int fin(int** plateau, piece_t J_act, piece_t* gagnant){
+bool fin(int** plateau, piece_t J_act, piece_t* gagnant){
     /*
+    J_act = joueur qui vient de jouer.
     Verifie si la partie est finie. 
     Retourne fini si la partie est finie ou non.
     Attribue au pointeur gagnant le joueur gagnant.
@@ -240,7 +268,8 @@ int fin(int** plateau, piece_t J_act, piece_t* gagnant){
 
     
 
-    if((h && hg && hd && g && d && b && bg && bd)){ 
+    if(!(h||hg||hd||g||d||b||bg||bd)){ 
+        //printf("Bloqué !\n");
         fini = true;
         *gagnant = J_act;
     }

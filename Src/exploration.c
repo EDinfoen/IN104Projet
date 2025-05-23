@@ -24,8 +24,9 @@ typedef struct noeud_ {float n; float N; statut_t statut; int** plateau; piece_t
 void print_noeud(noeud_t* nd){
     printf("#############################################\n");
     printf("Nb_victoire = %f\n", nd->n);
-    printf("Nb_exploration = %f\n", nd->N);
-    
+    printf("Nb_exploration = %d\n", nd->N);
+    printf("Statut = %d\n", nd->statut);
+    printf("Nb_fils = %d\n", generic_list_size(nd->liste_fils));
     printf("Code du coup joué : %d\n", nd->code_coup);
     affichage(nd->plateau);
     //printf("A J%d de jouer.\n", (nd->J)+1);
@@ -195,6 +196,14 @@ int exploration(noeud_t *pere){
     /*
     Renvoie le score (1.0 victoire 0.0 défaite) de J sur le plateau après une descente.
     */
+   //print_noeud(pere);
+   if(pere == NULL){
+    printf("STOP pere == NULL\n ");
+   }
+   //print_noeud(pere);
+   if(pere->liste_fils == NULL){
+    printf("STOP pere->liste_fils == NULL\n ");
+   }
     int nbr_fils = generic_list_size(pere->liste_fils);
     //printf("=> Il y a %d fils\n", nbr_fils);
 
@@ -226,15 +235,15 @@ int exploration(noeud_t *pere){
             noeud_t* fils=(noeud_t*)generic_list_data(elmt);
             if (fils->N == 0){ // Premier non vu 
                 
-                int deep_max=0;
+                int deep_max = 0;;
                 //printf("SIMULATION ");
                 
                 simulation(fils->plateau, fils->J, &deep_max, &res);
                     
-                fils->statut=EC;
+                //fils->statut=EC;
                 if (res == 0){ 
                     //défaite de fils->J
-                    if (deep_max==0){fils->statut = D;}
+                    if (deep_max == 0){fils->statut = D;}
                 }else{
                     //victoire
                     if (deep_max == 0){fils->statut = V;}
@@ -243,30 +252,32 @@ int exploration(noeud_t *pere){
                 //printf("MAJ \n");
                 fils->N = 1;
                 fils->n = res;
+                if(pere->J == J1 || pere->J == J2){
+                    res = 1 - res;
+                }
                 break; // On ne regarde pas les autres fils tout de suite. 
             }
         }
     }else if(nbr_fils == 0 && pere->statut != EC){
         
         // Noeud sans fils donc son statut est défini comme V ou D, partie finie
-        if (pere->statut==V){ res = 1; printf("statut= V\n");
-        }else{ res = 0; printf("statut=D\n");}
+        if (pere->statut == V){res = 1;} 
+        else{res = 0;}
     }else{
         printf("NOEUD, ");
         printf("nbr_fils = %d et Npere= %f\n", nbr_fils, pere->N);
         // Noeud dont tous les fils ont été explorés au moins une fois
         noeud_t* max_elmt;
-        float max_MCTS = 0;
+        float max_MCTS = 0.0;
         generic_list_elmt_t* elmt = generic_list_head(pere->liste_fils);
         //printf("CHOIX : ");
         for(; elmt != NULL; elmt = generic_list_next(elmt)){
             noeud_t* fils=(noeud_t*)generic_list_data(elmt);
-            printf("fils : N=%f ,n=%f,",fils->N,fils->n);
-            if( fils->N == 0){
+            if( fils->N == 0 || pere->N == 1){
                 printf("DIV ZERO\n");
                 print_noeud(fils);
             }
-            float MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(logf((pere->N))/ (fils->N)); // Pas de Pb fils->N non nul. //erreur parenthèse
+            float MCTS = (fils->n) /(fils->N) + sqrt(2)*sqrt(logf(pere->N)/ (fils->N)); // Pas de Pb fils->N non nul. 
             //printf("%f ", MCTS);
         
             if ( MCTS > max_MCTS){ 
@@ -292,16 +303,16 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
     Attribue à root le noeud associé au coup à joué (déplacement dans l'arbre)
     */
 
-    for (int i = 0; i < 50; i++){
+    for (int i = 0; i < NB_DESC; i++){
         exploration(root);
     }
-    printf("exploré\n");
+    //printf("exploré\n");
     float ratio = -10.0;
     int code = 9999;
     if(root->liste_fils == NULL){
         printf(" STOP : root->liste_fils == NULL\n");
     }
-    printf("%d fils\n", generic_list_size(root->liste_fils));
+    //printf("%d fils\n", generic_list_size(root->liste_fils));
     generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
     for(; elmt != NULL; elmt = generic_list_next(elmt)){
         
@@ -321,7 +332,7 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
             *root = *nd;
         }
     }
-    
+    printf("Ratio : %f, %d\n", ratio, root->statut);
     int temp = code;
     coup->yf = temp%10;
     temp = temp/10;
@@ -336,7 +347,7 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
 
 int deplacement_arbre(noeud_t* root, coup_t* coup){
     int code = ((coup->xi*10 + coup->yi)*10 + coup->xf)*10 + coup->yf;
-    printf("%d = %d,%d,%d,%d\n",code,coup->xi,coup->yi,coup->xf,coup->yf);
+    //printf("%d = %d,%d,%d,%d\n",code,coup->xi,coup->yi,coup->xf,coup->yf);
     if (generic_list_size(root->liste_fils) == 0){
         printf("pas de fils à la racine\n");
         //printf("GENERATION ");
@@ -364,11 +375,11 @@ int deplacement_arbre(noeud_t* root, coup_t* coup){
         noeud_t* fils = (noeud_t*)generic_list_data(elmt);
         
         if (fils->code_coup == code){
-            printf("LA !\n");
+            //printf("LA !\n");
             *root = *fils;
             return EXIT_SUCCESS;
         }
     }
-    printf("PAS LA\n");
+    //printf("PAS LA\n");
     return EXIT_FAIL;
 }
