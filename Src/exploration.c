@@ -335,11 +335,10 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
     for(; elmt != NULL; elmt = generic_list_next(elmt)){
         
         noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
-        print_noeud(nd);
+        
         if( nd == NULL){
             printf("STOP :  nd == NULL\n ");
         }
-        
         if( nd->N == 0){
             printf("DIV ZERO\n");
         }
@@ -349,7 +348,7 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
             *root = *nd;
         }
     }
-    printf("Ratio : %f, %d\n", ratio, root->statut);
+    
     int temp = code;
     coup->yf = temp%10;
     temp = temp/10;
@@ -375,19 +374,16 @@ int deplacement_arbre(noeud_t* root, coup_t* coup){
             printf("STOP ");
         }
         generation_fils(root->plateau, nextJ, root->liste_fils);
-
-        
     }
+
     generic_list_elmt_t* elmt = generic_list_head(root->liste_fils);
     for(; elmt != NULL; elmt = generic_list_next(elmt)){
         noeud_t* fils = (noeud_t*)generic_list_data(elmt);
         
-        if (fils->code_coup == code){
-            
+        if (fils->code_coup == code){        
             *root = *fils;
             return EXIT_SUCCESS;
         }
     }
-    
     return EXIT_FAIL;
 }

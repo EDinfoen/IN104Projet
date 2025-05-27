@@ -182,7 +182,7 @@ int jouer_IA(){
     char ordre = ' ';
     char c = ' ';
     int verif = scanf("%c%c",&ordre, &c);
-    if (verif != 2 || c != '\n'){
+    if (verif != 2 || c != '\n' || (ordre != 'y' && ordre != 'n')){
         printf("Erreur saisie ordre joueur\n");
         return EXIT_FAIL;
     }

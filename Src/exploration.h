@@ -1,3 +1,7 @@
+/*
+Contient les fonctions pour choisir le coup à jouer par une méthode de recherche Monte-Carlo. 
+*/
+
 #include "generic_list.h"
 #include <math.h>
 #include "evaluation.h"

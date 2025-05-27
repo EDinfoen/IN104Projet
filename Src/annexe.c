@@ -247,12 +247,12 @@ bool fin(int** plateau, piece_t J_act, piece_t* gagnant){
 
     localisation_bobail(plateau, &x, &y);
     if(y == 0){
-        printf("B à G\n");
+        
         fini = true;
         *gagnant = J2;
     }
     if(y == SIZE -1){
-        printf("B à D\n");
+        
         fini = true;
         *gagnant = J1;
     }

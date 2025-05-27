@@ -1,7 +1,7 @@
 #include "affichage.h"
 #include "exploration.h"
 /*
-Contient les fonctions pour jouer une partie tour après tour. 
+Contient les fonctions pour jouer une partie tour après tour contre un joueur ou une IA. 
 */
 
 int tour(int** plateau, coup_t* coup, piece_t J );

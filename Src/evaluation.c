@@ -4,7 +4,7 @@
 
 enum direction {N, NE, E, SE, S, SW, W, NW} ;
 
-void copier_plt(int** source, int** destination){ // Il existe peut-être plus efficasse ?
+void copier_plt(int** source, int** destination){ 
     for(int i = 0; i < SIZE; i++){
         for(int j = 0; j < SIZE; j++){
             destination[i][j] = source[i][j];
@@ -64,7 +64,7 @@ bool piece_mobile(int** plateau, int x, int y){
     //Parcours des 9 cases alentours du pion.
     for(int i = -1; i < 2; i++){
         for(int j = -1; j < 2; j++){
-            if (0 <= x+i && x+i <= (SIZE - 1) && y+j >= 0 && y+j <= (SIZE - 1)){ ///////////: J'ai mis des inégalités larges
+            if (0 <= x+i && x+i <= (SIZE - 1) && y+j >= 0 && y+j <= (SIZE - 1)){ 
                 if (plateau[x + i][y + j] == VIDE){return true;}
             }
         }
@@ -106,38 +106,36 @@ int coup_aleatoire (int** plateau, piece_t joueur, coup_t* coup){
         //on récupère les positions de pions
         int pions[SIZE];
         int nbr_pions = 0;
-        //printf("position:\n");
+        
         for (int i = 0; i < SIZE; i ++){
             for(int j = 0; j < SIZE; j++){
                 if (plateau[i][j] == joueur){
                     pions[nbr_pions] = i*10 + j;
-                    //printf("%d,%d\n", i, j);
                     nbr_pions ++;
                 }
                 if(nbr_pions == SIZE){break;} //tous les pions trouvés
             }
         }
-        //printf("trouve\n");
         
         //choix d'un pion pouvant bouge
         bool bloque = true;
         while(bloque){
             int k = rand()%(nbr_pions+1);
-            //printf("k=%d\n", k);
+            
             xi = pions[k]/10;
             yi = pions[k]%10;
-            //printf("%d,%d", xi, yi);
+            
             if(!piece_mobile(plateau, xi, yi)){
 
                 pions[k] = pions[nbr_pions];
                 nbr_pions--;
-                //printf("bloque\n");
+                
             }else{bloque = false;}
         }
-        //printf("mobile");
+        
     }else{
         localisation_bobail(plateau, &xi, &yi);
-        //printf("bobail\n");
+        
     }
 
     coup->xi = xi;
