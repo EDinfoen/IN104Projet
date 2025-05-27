@@ -147,10 +147,11 @@ int coup_aleatoire (int** plateau, piece_t joueur, coup_t* coup){
     bool avance = false;
     enum direction directions[8] = {N, NE, E, SE, S, SW, W, NW};
     int nbr_dir = 7;
-    int xf, yf;
+    int xf = 0;
+    int yf = 0;
     while(!avance){
         int k = rand()%(nbr_dir+1);
-        //printf("k2=%d\n", k);
+        
         enum direction dir = directions[k];
         avance = avancer(xi, yi, dir, &xf, &yf, plateau);
         if(!avance){//direction bloquee il faut changer
@@ -207,7 +208,7 @@ int simulation(int** plateau, piece_t J, int* deep_max, int* res){
    while(!fin(plateau_temp, J_act, &gagnant) && (*deep_max <= DEEP)){ // Gagnant prend la valeur J1 ou J2
         J_act = next_J(J_act);
         *deep_max += 1;
-        printf("deep=%d",*deep_max);
+        //printf("deep=%d",*deep_max);
         coup_aleatoire(plateau_temp, J_act, coup); 
         mouvement(plateau_temp, coup);       
         

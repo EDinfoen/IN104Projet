@@ -335,7 +335,7 @@ int saisie_coup_IA(noeud_t* root, coup_t* coup){
     for(; elmt != NULL; elmt = generic_list_next(elmt)){
         
         noeud_t* nd = ((noeud_t*)generic_list_data(elmt));
-        
+        print_noeud(nd);
         if( nd == NULL){
             printf("STOP :  nd == NULL\n ");
         }

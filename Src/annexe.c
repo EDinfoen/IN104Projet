@@ -247,24 +247,26 @@ bool fin(int** plateau, piece_t J_act, piece_t* gagnant){
 
     localisation_bobail(plateau, &x, &y);
     if(y == 0){
+        printf("B à G\n");
         fini = true;
         *gagnant = J2;
     }
     if(y == SIZE -1){
+        printf("B à D\n");
         fini = true;
         *gagnant = J1;
     }
 
     // Verification des cases libres autour du Bobail
 
-    bool h = (x > 0)&&(plateau[x-1][y] != VIDE);
-    bool hg = (x > 0)&&(y > 0)&&(plateau[x-1][y-1] != VIDE);
-    bool hd = (x > 0)&&(y < SIZE - 1)&&(plateau[x-1][y+1] != VIDE);
-    bool g = (y > 0)&&(plateau[x][y-1] != VIDE);
-    bool d = (y < SIZE - 1)&&(plateau[x][y+1] != VIDE);
-    bool b = (x < SIZE - 1)&&(plateau[x+1][y] != VIDE);
-    bool bg = (x < SIZE - 1)&&(y > 0)&&(plateau[x+1][y-1] != VIDE);
-    bool bd = (x < SIZE - 1)&&(y < SIZE - 1)&&(plateau[x+1][y+1] != VIDE);
+    bool h = (x > 0)&&(plateau[x-1][y] == VIDE);
+    bool hg = (x > 0)&&(y > 0)&&(plateau[x-1][y-1] == VIDE);
+    bool hd = (x > 0)&&(y < SIZE - 1)&&(plateau[x-1][y+1] == VIDE);
+    bool g = (y > 0)&&(plateau[x][y-1] == VIDE);
+    bool d = (y < SIZE - 1)&&(plateau[x][y+1] == VIDE);
+    bool b = (x < SIZE - 1)&&(plateau[x+1][y] == VIDE);
+    bool bg = (x < SIZE - 1)&&(y > 0)&&(plateau[x+1][y-1] == VIDE);
+    bool bd = (x < SIZE - 1)&&(y < SIZE - 1)&&(plateau[x+1][y+1] == VIDE);
 
     if(!(h||hg||hd||g||d||b||bg||bd)){ 
         fini = true;
