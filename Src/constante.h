@@ -14,7 +14,7 @@ Contient les constantes, les includes de bibliothèques standarts et certain typ
 
     #define SIZE 5
     #define DEEP 1000
-    #define NB_DESC 1000
+    #define NB_DESC 5000
 
     typedef enum {J1, J2, BOBAIL, VIDE, B1, B2} piece_t;
     
