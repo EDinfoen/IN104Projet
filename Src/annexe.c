@@ -186,8 +186,7 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
         if(J == J1 || J == J2){ // Déplacement Joueur
             char c_xf = ' ';
             char c_xi = ' ';
-        if(J == J1 || J == J2){ // Déplacement Joueur
-            
+                    
             printf("Joueur %d : mouvement pion (Format:A0 A0) :", J+1);
             verif = scanf("%c%d%c%c%d%c", &c_xi, &yi, &c, &c_xf, &yf, &c); // Saisie case départ
             if( verif == 6 && c == '\n'){
@@ -205,7 +204,7 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
 
         if(J == BOBAIL){ // Déplacement Bobail
             printf("Joueur %d : mouvement Bobail (Format:A0) :", J+1);
-            char c = ' '; //c et noncxf
+            char c_xf = ' '; //c et noncxf
             verif = scanf("%c%d%c", &c_xf, &yf, &c);
             if(verif == 3 && c == '\n'){
                 localisation_bobail(plateau,&(coup->xi), &(coup->yi));

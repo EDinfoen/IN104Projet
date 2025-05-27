@@ -30,7 +30,7 @@ void print_noeud(noeud_t* nd){
     */
     printf("#############################################\n");
     printf("Nb_victoire = %f\n", nd->n);
-    printf("Nb_exploration = %f\n", nd->N);
+    printf("Nb_exploration = %d\n", nd->N);
     printf("Statut = %d\n", nd->statut);
     printf("Nb_fils = %d\n", generic_list_size(nd->liste_fils));
     printf("J%d vient de jouer.\n", (nd->J)+1);
@@ -95,7 +95,21 @@ int init_noeud(noeud_t* noeud){
     return EXIT_SUCCESS;
 }
 
+void destroy_noeud(noeud_t* root){
+    if (generic_list_size(root->liste_fils)==0){
+        destroy(root->plateau);
+        free(root);
+        return;
+    }
 
+generic_list_elmt_t *elmt=generic_list_head(root->liste_fils);
+for(;elmt!=NULL; elmt=generic_list_next(elmt)){
+    noeud_t* fils=generic_list_data(elmt);
+    destroy_noeud(fils);
+}
+generic_list_destroy(root->liste_fils);
+
+}
 
 int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ 
     /*
@@ -139,7 +153,6 @@ int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){
                 if(avancer(xi, yi, dir, &xf, &yf, plateau)){ // Si on peut bouger...
                     int x = xf;
                     int y = yf;
-                    nbr_fils_generes++;
                     while(avancer(x, y, dir, &xf, &yf, plateau)){ //On continue tant que possible !
                         x = xf;
                         y = yf;
@@ -179,7 +192,6 @@ int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){
                 
                 // Ajout du noeud sur la liste
                 noeud_t* nd = malloc(sizeof(noeud_t));
-                nbr_fils_generes++;
                 
                 if(init_noeud(nd) == EXIT_SUCCESS){
                     nd->n = 0.0;
