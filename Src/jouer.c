@@ -2,11 +2,11 @@
 #include "exploration.h"
 
 
-int tour(int** plateau, coup_t* coup, piece_t J ){
+int tour(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv ){
     /*
     Exécute un tour : demande de coup au joueur J, modification de la position du pion, affichage du nouvel état du plateau.
     */
-    saisie_coup(plateau, coup, J);
+    saisie_coup(plateau, coup, J_act, p_mouv);
     mouvement(plateau, coup);
     affichage(plateau);
 
@@ -86,7 +86,7 @@ int jouer_pvp(){
     
     /************************** Premier tour *************************/
 
-    tour(plateau, coup, J1);
+    tour(plateau, coup, J1, J1);
     
     piece_t J_act = J2;
     piece_t gagnant = VIDE; // Par défaut
@@ -95,13 +95,13 @@ int jouer_pvp(){
     /************************** Autres tours *************************/
 
     do{
-        tour(plateau, coup, BOBAIL); // Mouvement du Bobail
+        tour(plateau, coup, J_act, BOBAIL); // Mouvement du Bobail
            
         if(fin(plateau, J_act, &gagnant)){
             break;
         }
 
-        tour(plateau, coup, J_act); // Mouvement du pion
+        tour(plateau, coup, J_act, J_act); // Mouvement du pion
     
         J_act = 1 - J_act;
 
@@ -217,23 +217,24 @@ int jouer_IA(){
     piece_t J_act = VIDE; // J1 ou J2
     if(IA == J2){ // Le joueur commence
         //Lors du 1er tour, pas de mvt du bobail.        
-        tour(plateau, coup, J1);
+        tour(plateau, coup, J1, J1);
         
         if (deplacement_arbre(root, coup) != EXIT_SUCCESS){
             printf("Erreur : deplacement racine\n");
             return EXIT_FAIL;
         }
 
-        J_act = J2; 
-
     }else{ // L'IA commence
         tour_IA(plateau, coup, root); 
-        J_act = J2;
     }
+    
+    J_act = J1; 
     
     /************************** Autres tours *************************/
     
-    do{
+    do{ 
+        J_act = 1 - J_act;
+
         if(J_act == IA){// Tour de l'IA
   
             tour_IA(plateau, coup, root); // Mouv du Bobail (contient le déplacement dans l'arbre)
@@ -244,11 +245,9 @@ int jouer_IA(){
 
             tour_IA(plateau, coup, root); // Mouv du pion (contient le déplacement dans l'arbre)
             
-            J_act = 1 - J_act;
-
         }else{// Tour du joueur
            
-            tour(plateau, coup, BOBAIL); // Mouvement du Bobail 
+            tour(plateau, coup, J_act, BOBAIL); // Mouvement du Bobail 
             if (deplacement_arbre(root, coup) != EXIT_SUCCESS){
                 printf("Erreur : deplacement racine\n");
                 return EXIT_FAIL;
@@ -258,19 +257,17 @@ int jouer_IA(){
                 break;
             }
 
-            tour(plateau, coup, J_act); // Mouvement du pion
+            tour(plateau, coup, J_act, J_act); // Mouvement du pion
             if (deplacement_arbre(root, coup) != EXIT_SUCCESS){
                 printf("Erreur : deplacement racine\n");
                 return EXIT_FAIL;
             }
 
-            J_act = 1 - J_act;
-
         }
     }while(!fin(plateau, J_act, &gagnant));
 
     /************************** Fin de partie *************************/
-
+    
     if(IA == gagnant){
         printf("Vous avez perdu !\n"); 
     }else{

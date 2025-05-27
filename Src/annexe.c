@@ -164,7 +164,7 @@ int localisation_bobail(int** plateau, int* x, int* y){
     return EXIT_SUCCESS;
 }
 
-int saisie_coup(int** plateau, coup_t* coup, piece_t J){
+int saisie_coup(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv){
     /*
     Saisie un coup licite. Demande tant que le coup n'est pas licite.
     */
@@ -183,10 +183,10 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
     do{
         char c = ' '; // Séparateur et saut de ligne
 
-        if(J == J1 || J == J2){ // Déplacement Joueur
+        if(p_mouv == J1 || p_mouv == J2){ // Déplacement Joueur
             char c_xf = ' ';
             char c_xi = ' ';
-            printf("Joueur %d : mouvement pion (Format:A0 A0) :", J+1);
+            printf("Joueur %d : mouvement pion (Format:A0 A0) :", J_act+1);
             verif = scanf("%c%d%c%c%d%c", &c_xi, &yi, &c, &c_xf, &yf, &c); // Saisie case départ
             if( verif == 6 && c == '\n'){
                 xi = (int)c_xi - 65;
@@ -201,8 +201,8 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
             }
         }
 
-        if(J == BOBAIL){ // Déplacement Bobail
-            printf("Joueur %d : mouvement Bobail (Format:A0) :", J+1);
+        if(p_mouv == BOBAIL){ // Déplacement Bobail
+            printf("Joueur %d : mouvement Bobail (Format:A0) :", J_act+1);
             char c_xf = ' ';
             verif = scanf("%c%d%c", &c_xf, &yf, &c);
             if(verif == 3 && c == '\n'){
@@ -215,7 +215,7 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
             }
         }
         
-    }while(!licite(plateau, coup, J));
+    }while(!licite(plateau, coup, p_mouv));
 
     return EXIT_SUCCESS;
 }
