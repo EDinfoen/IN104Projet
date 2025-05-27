@@ -165,7 +165,6 @@ int localisation_bobail(int** plateau, int* x, int* y){
 }
 
 int saisie_coup(int** plateau, coup_t* coup, piece_t J){
-
     /*
     Saisie un coup licite. Demande tant que le coup n'est pas licite.
     */
@@ -183,12 +182,13 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
     int verif = 0;
     do{
         char c = ' '; // Séparateur et saut de ligne
+
         if(J == J1 || J == J2){ // Déplacement Joueur
             char c_xf = ' ';
             char c_xi = ' ';
             printf("Joueur %d : mouvement pion (Format:A0 A0) :", J+1);
             verif = scanf("%c%d%c%c%d%c", &c_xi, &yi, &c, &c_xf, &yf, &c); // Saisie case départ
-            if( verif == 6 && c== '\n'){
+            if( verif == 6 && c == '\n'){
                 xi = (int)c_xi - 65;
                 coup->xi = xi;
                 coup->yi = yi;
@@ -196,15 +196,16 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J){
                 coup->xf = xf;
                 coup->yf = yf;
                 
-            }else{
+            }else{               
                 printf("Mauvais format de saisie \n");
             }
         }
+
         if(J == BOBAIL){ // Déplacement Bobail
             printf("Joueur %d : mouvement Bobail (Format:A0) :", J+1);
             char c_xf = ' ';
             verif = scanf("%c%d%c", &c_xf, &yf, &c);
-            if( verif == 3){
+            if(verif == 3 && c == '\n'){
                 localisation_bobail(plateau,&(coup->xi), &(coup->yi));
                 xf = (int)c_xf - 65;
                 coup->xf = xf;
@@ -265,10 +266,7 @@ bool fin(int** plateau, piece_t J_act, piece_t* gagnant){
     bool bg = (x < SIZE - 1)&&(y > 0)&&(plateau[x+1][y-1] == VIDE);
     bool bd = (x < SIZE - 1)&&(y < SIZE - 1)&&(plateau[x+1][y+1] == VIDE);
 
-    
-
     if(!(h||hg||hd||g||d||b||bg||bd)){ 
-        //printf("Bloqué !\n");
         fini = true;
         *gagnant = J_act;
     }

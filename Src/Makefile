@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Werror -g
+CFLAGS=-Wall -Werror 
 all: projet.x
 
 projet.o: projet.c jouer.h
