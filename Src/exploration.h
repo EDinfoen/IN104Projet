@@ -29,6 +29,7 @@ void print_noeud_list(noeud_list_t* liste);
 
 int init_noeud(noeud_t* noeud);
 int generation_fils(int** plateau, piece_t J, noeud_list_t* liste);
+void destroy_noeud(noeud_t* root);
 
 int exploration(noeud_t *pere);
 int saisie_coup_IA(noeud_t* root, coup_t* coup);

@@ -207,6 +207,7 @@ int simulation(int** plateau, piece_t J, int* deep_max, int* res){
    while(!fin(plateau_temp, J_act, &gagnant) && (*deep_max <= DEEP)){ // Gagnant prend la valeur J1 ou J2
         J_act = next_J(J_act);
         *deep_max += 1;
+        printf("deep=%d",*deep_max);
         coup_aleatoire(plateau_temp, J_act, coup); 
         mouvement(plateau_temp, coup);       
         

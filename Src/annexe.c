@@ -180,7 +180,7 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv){
     coup->yf = yf;
 
     int verif = 0;
-    do{
+     do{
         char c = ' '; // Séparateur et saut de ligne
 
         if(p_mouv == J1 || p_mouv == J2){ // Déplacement Joueur
@@ -257,14 +257,14 @@ bool fin(int** plateau, piece_t J_act, piece_t* gagnant){
 
     // Verification des cases libres autour du Bobail
 
-    bool h = (x > 0)&&(plateau[x-1][y] == VIDE);
-    bool hg = (x > 0)&&(y > 0)&&(plateau[x-1][y-1] == VIDE);
-    bool hd = (x > 0)&&(y < SIZE - 1)&&(plateau[x-1][y+1] == VIDE);
-    bool g = (y > 0)&&(plateau[x][y-1] == VIDE);
-    bool d = (y < SIZE - 1)&&(plateau[x][y+1] == VIDE);
-    bool b = (x < SIZE - 1)&&(plateau[x+1][y] == VIDE);
-    bool bg = (x < SIZE - 1)&&(y > 0)&&(plateau[x+1][y-1] == VIDE);
-    bool bd = (x < SIZE - 1)&&(y < SIZE - 1)&&(plateau[x+1][y+1] == VIDE);
+    bool h = (x > 0)&&(plateau[x-1][y] != VIDE);
+    bool hg = (x > 0)&&(y > 0)&&(plateau[x-1][y-1] != VIDE);
+    bool hd = (x > 0)&&(y < SIZE - 1)&&(plateau[x-1][y+1] != VIDE);
+    bool g = (y > 0)&&(plateau[x][y-1] != VIDE);
+    bool d = (y < SIZE - 1)&&(plateau[x][y+1] != VIDE);
+    bool b = (x < SIZE - 1)&&(plateau[x+1][y] != VIDE);
+    bool bg = (x < SIZE - 1)&&(y > 0)&&(plateau[x+1][y-1] != VIDE);
+    bool bd = (x < SIZE - 1)&&(y < SIZE - 1)&&(plateau[x+1][y+1] != VIDE);
 
     if(!(h||hg||hd||g||d||b||bg||bd)){ 
         fini = true;

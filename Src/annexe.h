@@ -3,11 +3,13 @@ Contient les fonctions annexes qui servent à jouer une partie dans le fichier j
 */
 
 #include "constante.h"
+
 typedef struct coup_ {int xi; int yi; int xf; int yf;} coup_t;
 
 
 int init(int** plateau);
 void destroy(int ** plateau);
+
 
 bool licite(int** plateau, coup_t* coup, piece_t J); 
 int localisation_bobail(int** plateau, int* x, int* y);

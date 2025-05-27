@@ -168,6 +168,7 @@ int jouer_IA(){
     
     // Création de l'arbre 
     noeud_t* root=malloc(sizeof(noeud_t));
+    noeud_t* souche=root;
     if (root==NULL){
         printf("Erreur init: allocation root\n");
         return EXIT_FAIL;
@@ -252,7 +253,6 @@ int jouer_IA(){
                 printf("Erreur : deplacement racine\n");
                 return EXIT_FAIL;
             }
-
             if(fin(plateau, J_act, &gagnant)){
                 break;
             }
@@ -279,6 +279,7 @@ int jouer_IA(){
     
     free(coup);
     destroy(plateau);
+    destroy_noeud(souche);
 
     return EXIT_SUCCESS;
 }

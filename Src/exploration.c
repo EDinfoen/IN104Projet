@@ -95,7 +95,21 @@ int init_noeud(noeud_t* noeud){
     return EXIT_SUCCESS;
 }
 
+void destroy_noeud(noeud_t* root){
+    if (generic_list_size(root->liste_fils)==0){
+        destroy(root->plateau);
+        free(root);
+        return;
+    }
 
+generic_list_elmt_t *elmt=generic_list_head(root->liste_fils);
+for(;elmt!=NULL; elmt=generic_list_next(elmt)){
+    noeud_t* fils=generic_list_data(elmt);
+    destroy_noeud(fils);
+}
+generic_list_destroy(root->liste_fils);
+
+}
 
 int generation_fils(int** plateau, piece_t J, noeud_list_t* liste){ 
     /*
