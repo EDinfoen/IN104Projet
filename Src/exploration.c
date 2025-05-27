@@ -24,7 +24,7 @@ typedef struct noeud_ {float n; float N; statut_t statut; int** plateau; piece_t
 void print_noeud(noeud_t* nd){
     printf("#############################################\n");
     printf("Nb_victoire = %f\n", nd->n);
-    printf("Nb_exploration = %d\n", nd->N);
+    printf("Nb_exploration = %f\n", nd->N);
     printf("Statut = %d\n", nd->statut);
     printf("Nb_fils = %d\n", generic_list_size(nd->liste_fils));
     printf("Code du coup joué : %d\n", nd->code_coup);
