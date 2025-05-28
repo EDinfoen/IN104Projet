@@ -3,6 +3,7 @@
 
 ## Aperçu 
 Le but du projet est d'implémenter le jeu de Bobail en version joueur contre joueur puis contre une IA reposant sur la recherche Monte Carlo. 
+![game_box](https://github.com/user-attachments/assets/f35618ce-83c2-4034-bbb5-5d75bd64ae13)
 
 ## Règles
 
