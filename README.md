@@ -9,12 +9,12 @@ Le but du projet est d'implémenter le jeu de Bobail en version joueur contre jo
 ## Règles
 
  - Les règles de déplacement des pions sont les suivantes:
-1. Le BOBAIL ne se déplace que 
+     1. Le BOBAIL ne se déplace que 
 d'une seule case, dans 
 n'importe quelle direction (y 
 compris les diagonales)
 
-2. Les pions se déplacent 
+    2. Les pions se déplacent 
 également dans toutes les 
 directions, mais jusqu’au bout 
 de la rangée, ou jusqu’à un 
