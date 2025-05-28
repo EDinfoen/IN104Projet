@@ -8,6 +8,18 @@ Le but du projet est d'implémenter le jeu de Bobail en version joueur contre jo
 
 ## Règles
 
+- Le Bobail se joue sur un plateau de 
+5x5 cases. Chaque joueur dispose de 5 pions. Un dernier pion est 
+neutre, le BOBAIL, et est installé au centre du plateau.
+
+-  Pour gagner il faut amener le BOBAIL dans une position particulière:
+     1.  Soit le bobail est positionné sur 
+une des 5 cases de départ des 
+pions.
+     2. Soit en bloquant le BOBAIL (de 
+sorte que l’adversaire ne puisse 
+pas le bouger).
+
  - Les règles de déplacement des pions sont les suivantes:
      1. Le BOBAIL ne se déplace que 
 d'une seule case, dans 
