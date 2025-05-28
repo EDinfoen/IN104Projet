@@ -2,7 +2,7 @@
 # Jeu du Bobail
 
 ## Aperçu 
-Le but du projet est d'implémenter le jeu de Bobail en version joueur contre joueur puis contre une IA reposant sur la recherche Monte Carlo. 
+Le but du projet est d'implémenter le jeu du Bobail en version joueur contre joueur puis contre une IA reposant sur la recherche Monte Carlo. 
 
 ## Règles
 
@@ -10,17 +10,17 @@ Le but du projet est d'implémenter le jeu de Bobail en version joueur contre jo
 ## Prérequis
 C
 
-## Démarrage d'une partie
+## Utilisation
 Saisissez les commandes suivantes:
 
-cd Src
-make
-./projet.x 
+- cd Src
+- make
+- ./projet.x 
 
 ## Fonctionnalité 
--Affichage dans le terminal 
--Mode joueur contre joueur
--Mode solo contre une IA
+- Affichage dans le terminal 
+- Mode joueur contre joueur
+- Mode solo contre une IA
 
 
 
