@@ -19,8 +19,12 @@ Saisissez les commandes suivantes:
 - make
 - ./projet.x 
 
+
 ## Fonctionnalité 
-- Affichage dans le terminal 
+- Affichage dans le terminal
+  
+  ![Capture d'écran 2025-05-28 215457](https://github.com/user-attachments/assets/e711b9ba-2958-4565-8724-4ba21834b599)
+  
 - Mode joueur contre joueur
 - Mode solo contre une IA
 
