@@ -242,7 +242,7 @@ int exploration(noeud_t *pere){
 
     /////////////////////////////// Descente dans l'arbre ////////////////////////////////
 
-    int res = 0.0; // Par défaut
+    int res = 0; // Par défaut
     nbr_fils = generic_list_size(pere->liste_fils);
     
     /********************************** Feuille *****************************************/

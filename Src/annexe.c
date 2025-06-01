@@ -182,7 +182,7 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv){
     int verif = 0;
      do{
         char c = ' '; // Séparateur et saut de ligne
-
+        char* efface = malloc(sizeof(char)); // Sert à récupérer ce qu'il reste sur l'entrée après une saisie
         if(p_mouv == J1 || p_mouv == J2){ // Déplacement Joueur
             char c_xf = ' ';
             char c_xi = ' ';
@@ -196,7 +196,8 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv){
                 coup->xf = xf;
                 coup->yf = yf;
                 
-            }else{               
+            }else{              
+                scanf("%s", efface); // Efface ce qu'il reste sur l'entrée.
                 printf("Mauvais format de saisie \n");
             }
         }
@@ -211,6 +212,7 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv){
                 coup->xf = xf;
                 coup->yf = yf;
             }else{
+                scanf("%s", efface); // Efface ce qu'il reste sur l'entrée.
                 printf("Mauvais format de saisie \n");
             }
         }
@@ -239,7 +241,7 @@ bool fin(int** plateau, piece_t J_act, piece_t* gagnant){
     J_act = joueur qui vient de jouer.
     Verifie si la partie est finie. 
     Retourne fini si la partie est finie ou non.
-    Attribue au pointeur gagnant le joueur gagnant.
+    Attribue au pointeur gagnant le joueur gagnant (J1 ou J2 jamais Bobail).
     */
     int x = -1;
     int y = -1;
