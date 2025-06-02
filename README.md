@@ -32,9 +32,9 @@ directions, mais jusqu’au bout
 de la rangée, ou jusqu’à un 
 obstacle.
 
-- Les joueurs jouent à tour de rôle. À son tour, le joueur déplace deux 
-pions. D’abord le BOBAIL, puis un de ses 5 pions, suivant le principe 
-de déplacement du jeu. 
+- Les joueurs jouent à tour de rôle. À son tour, le joueur déplace obligatoirement deux 
+pions, d’abord le BOBAIL, puis un de ses 5 pions, suivant le principe 
+de déplacement du jeu.
 Exception : celui qui entame la partie n’avance que l’un de ses pions 
 (le mouvement du BOBAIL est sauté).
 
