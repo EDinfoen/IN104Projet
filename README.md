@@ -57,9 +57,9 @@ Saisissez les commandes suivantes:
 - Mode joueur contre joueur : entrer 1  lorsque la demande apparaît au départ dans le terminal.
 - Mode solo contre une IA : entrer 0 lorsque la demande apparaît au départ dans le terminal. L'IA codée se base sur le principe du Monte-Carlo, en effectuant un nbr NBR_DESCENTES, hyperparamètre valant 50 000  par défaut et correspondant au nombre d'explorations. Un noeud de l'arbre représente un état du jeu possible. Les fils d'un noeud sont tous les coups que le joueur suivant peut effectuer à partir du plateau du  noeud actuel. Lors de l'exploration, c'est celui qui aura le meilleur MCTS qui sera exploré en priorité, à défaut le 1er des noeuds de la liste sera sélectionné. Pour estimer le nombre de victoires d'une feuille, une fin de partie aléatoire à partir du plateau de cette feuille est réalisée, à moins qu'elle ne représente déjà un plateau de victoire ou de défaite assurée. Après la phase de rétropropagation, l'IA choisira le noeud ayant le plus grand ratio victoire sur nombre d'explorations comme coup à jouer.
 - Pour donner un coup pour :
-       - le BOBAIL il suffit d'entrer la case sur laquelle le joueur souhaite le positionner sous la forme 'A0';
-       - un PION, il faut entrer la case de départ du pion puis sa case d'arrivée séparée d'un espace, soit 'A0 B1'
-  dans tous les cas si le coup n'est pas valide (dépassement du plateau ou mauvais choix de pion), il sera automatiquement demandé au joueur d'entrer un nouveau coup pour la même pièce.
+     -  le BOBAIL il suffit d'entrer la case sur laquelle le joueur souhaite le positionner sous la forme 'A0',
+     -  un PION, il faut entrer la case de départ du pion puis sa case d'arrivée séparée d'un espace, soit 'A0 B1'.
+  Dans tous les cas si le coup n'est pas valide (dépassement du plateau ou mauvais choix de pion), il sera automatiquement demandé au joueur d'entrer un nouveau coup pour la même pièce.
 
 
 
