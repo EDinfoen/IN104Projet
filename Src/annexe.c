@@ -181,6 +181,7 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv){
 
     int verif = 0;
      do{
+        printf("\n");
         char c = ' '; // Séparateur et saut de ligne
         char* efface = malloc(sizeof(char)); // Sert à récupérer ce qu'il reste sur l'entrée après une saisie
         if(p_mouv == J1 || p_mouv == J2){ // Déplacement Joueur
@@ -196,10 +197,11 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv){
                 coup->xf = xf;
                 coup->yf = yf;
                 
-            }else{              
-                scanf("%s", efface); // Efface ce qu'il reste sur l'entrée.
+            }else{   
+                scanf("%s%c", efface, &c); // Efface ce qu'il reste sur l'entrée.           
                 printf("Mauvais format de saisie \n");
             }
+            
         }
 
         if(p_mouv == BOBAIL){ // Déplacement Bobail
@@ -212,9 +214,10 @@ int saisie_coup(int** plateau, coup_t* coup, piece_t J_act, piece_t p_mouv){
                 coup->xf = xf;
                 coup->yf = yf;
             }else{
-                scanf("%s", efface); // Efface ce qu'il reste sur l'entrée.
+                scanf("%s%c", efface, &c); // Efface ce qu'il reste sur l'entrée.
                 printf("Mauvais format de saisie \n");
             }
+            
         }
         
     }while(!licite(plateau, coup, p_mouv));
