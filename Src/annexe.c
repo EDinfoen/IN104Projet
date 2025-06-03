@@ -98,16 +98,17 @@ bool licite(int** plateau, coup_t* coup, piece_t J){
         return true;
         
     }
+
     if( J == J1 || J == J2){ // Mouvement de joueur
 
         int dx = 2;
         int dy = 2;
 
-        if( xf == xi ){
+        if( yf == yi ){
             dx = 0;
             dy = (yf - yi)/abs(yf - yi);
         }
-        if(yf == yi){
+        if(xf == xi){
             dx = (xf - xi)/abs(xf - xi);
             dy = 0;
         }
@@ -128,7 +129,7 @@ bool licite(int** plateau, coup_t* coup, piece_t J){
         while (x_temp != xf && y_temp != yf){ // Chemin libre
             x_temp = x_temp + dx;
             y_temp = y_temp + dy;
-
+            printf("%d\n", plateau[x_temp][y_temp]);
             if(plateau[x_temp][y_temp] != VIDE){
                 printf("Coup non licite\n");
                 return false;
@@ -254,12 +255,12 @@ bool fin(int** plateau, piece_t J_act, piece_t* gagnant){
     if(y == 0){
         
         fini = true;
-        *gagnant = J2;
+        *gagnant = J1;
     }
     if(y == SIZE -1){
         
         fini = true;
-        *gagnant = J1;
+        *gagnant = J2;
     }
 
     // Verification des cases libres autour du Bobail
